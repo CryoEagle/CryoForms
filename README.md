@@ -8,6 +8,8 @@ Thank you for choosing **CryoForms**. This document will help you to start using
 
 You should use it in projects and places where you want real-time validating user inputs, this means user, or administrator have better feelings when using your application, we want give developer ability to complete modify our components outside of core, so he could completely manage behaviors of components like colors, appearance when typing not valid input.
 
+![alt text](https://i.imgur.com/12UaZvG.png "Example")
+
 ## 📦 Install
 
 ```
