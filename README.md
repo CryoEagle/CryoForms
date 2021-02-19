@@ -22,7 +22,7 @@ You can find **CryoForms** on **npm packages** right here https://www.npmjs.com/
 import { CryoForm, CryoInput, CryoButton, cryoUseForm } from 'cryoforms';
 
 const Index = () => {
-	const [form] = cryoUseForm();
+    const [form] = cryoUseForm();
     
     const success = (x) => {
         console.log(x);
