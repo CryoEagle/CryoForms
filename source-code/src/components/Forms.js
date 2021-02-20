@@ -72,23 +72,24 @@ CryoForm.propTypes = {
 const ruleRequired = (inputEl, errorEl, mess) => {
     if(inputEl.value == ""){
         inputEl.setAttribute("error", mess);
-        errorEl.style.height = '15px';
+        errorEl.style.display = 'block';
         errorEl.innerHTML = mess;
         return true;
     } else {
         inputEl.removeAttribute("error");
-        errorEl.style.height = '0px';
+        errorEl.style.display = 'none';
     }
 }
 
 const ruleMinLength = (inputEl, errorEl, mess, length) => {
     if(inputEl.value.length < length){
         inputEl.setAttribute("error", mess);
-        errorEl.style.height = '15px';
+        errorEl.style.display = 'block';
         errorEl.innerHTML = mess;
+        return true;
     } else {
         inputEl.removeAttribute("error");
-        errorEl.style.height = '0px';
+        errorEl.style.display = 'none';
     }
 }
 
@@ -100,18 +101,18 @@ const ruleType = (inputEl, errorEl, mess, type) => {
     
     if(type == "email" && !validateEmail(inputEl.value)){
         inputEl.setAttribute("error", mess);
-        errorEl.style.height = '15px';
+        errorEl.style.display = 'block';
         errorEl.innerHTML = mess;
         return true;
     } else {
         inputEl.removeAttribute("error");
-        errorEl.style.height = '0px';
+        errorEl.style.display = 'none';
     }
 }
 
 const displayList = ['outlined','material']
 
-export const CryoInput = ({label, placeholder, name, description, type, rows = 1, rules = [], display = "outlined", autoComplete = ""}) => {
+export const CryoInput = ({label, placeholder, name, description, type, rows = 1, rules = [], display = "outlined", autoComplete = "", inputProps = {}, errorMessProps = {}, onNotValidChange = () => {}, onValidChange = () => {}}, descriptionProps = {}) => {
     const id = uuid();
     const innerType = (type == undefined ? "text" : type)
 
@@ -130,21 +131,36 @@ export const CryoInput = ({label, placeholder, name, description, type, rows = 1
     const displayLocal = getDisplay();
 
     const checkRules = () => {
-        rules.some((rule) => {
+        let error = false;
+        rules.filter((rule) => {
             if(rule.required){
-                let error = ruleRequired(inputRef.current, errorMessRef.current, rule.errorMessage);
-                if (error) return true;
+                error = ruleRequired(inputRef.current, errorMessRef.current, rule.errorMessage);
+                if (error) {
+                    onNotValidChange(inputRef.current, errorMessRef.current, rule.errorMessage);
+                    return true;
+                };
             }
 
             if(rule.type){
-                let error = ruleType(inputRef.current, errorMessRef.current, rule.errorMessage, rule.type);
-                if (error) return true;
+                error = ruleType(inputRef.current, errorMessRef.current, rule.errorMessage, rule.type);
+                if (error) {
+                    onNotValidChange(inputRef.current, errorMessRef.current, rule.errorMessage);
+                    return true;
+                };
             }
 
             if(rule.minLength){
-                ruleMinLength(inputRef.current, errorMessRef.current, rule.errorMessage, rule.minLength);
+                error = ruleMinLength(inputRef.current, errorMessRef.current, rule.errorMessage, rule.minLength);
+                if(error) {
+                    onNotValidChange(inputRef.current, errorMessRef.current, rule.errorMessage);
+                    return true;
+                }
             }
         });
+
+        if(!error){
+            onValidChange(inputRef.current, errorMessRef.current);
+        }
     }
 
     const inputData = {
@@ -164,12 +180,12 @@ export const CryoInput = ({label, placeholder, name, description, type, rows = 1
 
     return (
         <div className={`cryo-${displayLocal} cryo-group cryo-input`}>
-            <small ref={errorMessRef} style={{display: 'block', height: 0, overflow: 'hidden', color: 'rgba(224, 74, 74, .6)', transition: '.3s ease height'}}></small>
+            <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess ${(errorMessProps.className ? errorMessProps.className : "")}`}></small>
             <div className="input">
                 {innerType != "textarea" ? (
-                    <input ref={inputRef} {...inputData} autoComplete={autoComplete} />
+                    <input ref={inputRef} {...inputData} autoComplete={autoComplete} {...inputProps}/>
                 ) : (
-                    <textarea ref={inputRef} {...inputData} />
+                    <textarea ref={inputRef} {...inputData} {...inputProps} />
                 )}
                 {label && (
                     <div>
@@ -178,7 +194,7 @@ export const CryoInput = ({label, placeholder, name, description, type, rows = 1
                 )}
             </div>
             {description && (
-                <small className="cryo-description">{description} </small>
+                <small {...descriptionProps} className={`cryo-description ${(descriptionProps.className ? descriptionProps.className : "")}`}>{description} </small>
             )}
         </div>
     )
@@ -193,7 +209,12 @@ CryoInput.propTypes = {
     rows: PropTypes.number,
     rules: PropTypes.array,
     display: PropTypes.oneOf(displayList),
-    autoComplete: PropTypes.string
+    autoComplete: PropTypes.string,
+    inputProps: PropTypes.object,
+    errorMessProps: PropTypes.object,
+    onNotValidChange: PropTypes.func,
+    onValidChange: PropTypes.func,
+    descriptionProps: PropTypes.object
 }
 
 export const CryoButton = ({children, block = false}) => {

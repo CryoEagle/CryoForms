@@ -33,6 +33,12 @@ $main-color: #ff5722;
 .cryo-input {
     font-family: Roboto, sans-serif;
 
+    .cryo-error-mess{
+        display: 'none';
+        overflow: 'hidden'; 
+        color: rgba(224, 74, 74, .6);
+    }
+
     label {
         font-size: 12px;
         font-stretch: 100%;
