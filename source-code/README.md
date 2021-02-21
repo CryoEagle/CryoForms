@@ -28,6 +28,7 @@ const Index = () => {
     
     const success = (x) => {
         console.log(x);
+        form.clearInputs();
     }
     
     const failed = (message){
@@ -40,6 +41,7 @@ const Index = () => {
                 autoComplete={"off"}
                 name="username"
                 label="Username" 
+                inputProps={{className: "input-test"}}
                 rules={[
                     {required: true, errorMessage: "Please enter username"},
                     {minLength: 5, errorMessage: 'username should have at least 5 characters'}]} 
@@ -61,9 +63,20 @@ const Index = () => {
                     {required: true, errorMessage: "Please enter password"},
                 ]} 
             />
+            <CryoInput 
+                autoComplete={"off"}
+                name="number"
+                label="Number" 
+                rules={[
+                    {required: true, errorMessage: "Please enter number"},
+                    {type: 'number', errorMessage: 'Enter valid number please'}]} 
+            />
             <CryoButton block={true}>Login</CryoButton>
         </CryoForm>
     );
 }
 ```
 
+# 📚 Wiki
+
+Check our wiki for more information https://github.com/CryoEagle/CryoForms/wiki

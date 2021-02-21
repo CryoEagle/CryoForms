@@ -37,21 +37,27 @@ export const CryoForm = ({successFunc = () => {}, failedFunc = () => {}, childre
         let formValue = {};
         let failed = false;
 
-        inputs.some((input) => {
-            var event = new CustomEvent('validate');
-            input.dispatchEvent(event);
+        for(let i = 0; i < inputs.length; i++){
+            let event = new CustomEvent('validate');
+            inputs[i].dispatchEvent(event);
 
-            let error = input.getAttribute("error");
+            let error = inputs[i].getAttribute("error");
             if(error){
                 failedFunc(error);
                 failed = true;
             }
-
-            if(input) {
-                formValue = {...formValue, [input.getAttribute("name")]: input.value}
+            
+            if(inputs[i] && inputs[i].classList.contains('cryo-input')) {
+                formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].value}
+                continue;
             }
-        });
-        
+
+            if(inputs[i] && inputs[i].classList.contains('cryo-switch-checkbox')){
+                formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].checked}
+                continue;
+            }
+        }
+
         if(!failed) successFunc(formValue);
     } 
 
@@ -98,8 +104,18 @@ const ruleType = (inputEl, errorEl, mess, type) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
+
+    const validateNumber = (number) => {
+        const re = /^\d+$/;
+        return re.test(number);
+    }
     
     if(type == "email" && !validateEmail(inputEl.value)){
+        inputEl.setAttribute("error", mess);
+        errorEl.style.display = 'block';
+        errorEl.innerHTML = mess;
+        return true;
+    } else if (type == "number" && !validateNumber(inputEl.value)){
         inputEl.setAttribute("error", mess);
         errorEl.style.display = 'block';
         errorEl.innerHTML = mess;
@@ -110,29 +126,16 @@ const ruleType = (inputEl, errorEl, mess, type) => {
     }
 }
 
-const displayList = ['outlined','material']
-
-export const CryoInput = ({label, placeholder, name, description, type, rows = 1, rules = [], display = "outlined", autoComplete = "", inputProps = {}, errorMessProps = {}, onNotValidChange = () => {}, onValidChange = () => {}}, descriptionProps = {}) => {
+export const CryoInput = ({defaultValue, label, placeholder, name, description, type, rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}}) => {
     const id = uuid();
     const innerType = (type == undefined ? "text" : type)
 
     const inputRef = useRef(null);
     const errorMessRef = useRef(null);
 
-    const getDisplay = () => {
-        let rigthDisplay = display;
-        if(!displayList.includes(rigthDisplay)){
-            rigthDisplay = "outlined";
-        }
-
-        return rigthDisplay;
-    }
-
-    const displayLocal = getDisplay();
-
     const checkRules = () => {
         let error = false;
-        rules.filter((rule) => {
+        rules.some((rule) => {
             if(rule.required){
                 error = ruleRequired(inputRef.current, errorMessRef.current, rule.errorMessage);
                 if (error) {
@@ -163,9 +166,25 @@ export const CryoInput = ({label, placeholder, name, description, type, rows = 1
         }
     }
 
-    const inputData = {
-        className: 'cryo-control',
-        id: id,
+    const getInputClassName = () => {
+        if(inputProps.className){
+            return `cryo-control cryo-input ${inputProps.className}`;
+        } else {
+            return `cryo-control cryo-input`;
+        }
+    }
+
+    const getId = () => {
+        if(inputProps.id){
+            return inputProps.id;
+        } else {
+            return id;
+        }
+    }
+
+    let inputData = {
+        className: getInputClassName(),
+        id: getId(),
         placeholder: placeholder,
         name: name,
         type: innerType,
@@ -176,16 +195,19 @@ export const CryoInput = ({label, placeholder, name, description, type, rows = 1
 
     useEffect(() => {
         inputRef.current.addEventListener("validate", checkRules, false);
+        if(defaultValue) {
+            inputRef.current.value = defaultValue;
+        }
     }, []);
 
     return (
-        <div className={`cryo-${displayLocal} cryo-group cryo-input`}>
+        <div className={`cryo-inline cryo-group cryo-input`}>
             <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess ${(errorMessProps.className ? errorMessProps.className : "")}`}></small>
             <div className="input">
                 {innerType != "textarea" ? (
-                    <input ref={inputRef} {...inputData} autoComplete={autoComplete} {...inputProps}/>
+                    <input ref={inputRef} {...inputProps} {...inputData} autoComplete={autoComplete} />
                 ) : (
-                    <textarea ref={inputRef} {...inputData} {...inputProps} />
+                    <textarea ref={inputRef} {...inputProps} {...inputData} />
                 )}
                 {label && (
                     <div>
@@ -208,21 +230,31 @@ CryoInput.propTypes = {
     type: PropTypes.string,
     rows: PropTypes.number,
     rules: PropTypes.array,
-    display: PropTypes.oneOf(displayList),
     autoComplete: PropTypes.string,
     inputProps: PropTypes.object,
     errorMessProps: PropTypes.object,
     onNotValidChange: PropTypes.func,
     onValidChange: PropTypes.func,
-    descriptionProps: PropTypes.object
+    descriptionProps: PropTypes.object,
+    defaultValue: PropTypes.string
 }
 
-export const CryoButton = ({children, block = false}) => {
+export const CryoButton = ({children, block = false, buttonProps = {}, color, size = "casual"}) => {
 
     const setClassNames = () => {
         let classes = "";
         if(block){
             classes += "cryo-btn-block ";
+        }
+
+        if(color) {
+            classes += `cryo-btn-${color} `
+        }
+
+        classes += `cryo-btn-${size} `;
+
+        if(buttonProps.className){
+            classes += `${buttonProps.className} `
         }
 
         return classes;
@@ -232,11 +264,64 @@ export const CryoButton = ({children, block = false}) => {
 
     return (
         <div className="cryo-group">
-            <button type="submit" className={`cryo-btn cryo-btn-primary ${classNames}`}>{children}</button>
+            <button type="submit" className={`cryo-btn ${classNames}`}>{children}</button>
         </div>
     )
 }
 
 CryoButton.propTypes = {
-    block: PropTypes.bool
+    block: PropTypes.bool,
+    buttonProps: PropTypes.object,
+    color: PropTypes.string,
+    size: PropTypes.string
+}
+
+export const CryoSwitch = ({defaultValue, onColor = '#ff5722', label, name}) => {
+    const [isOn, setIsOn] = useState(defaultValue ? defaultValue : false);
+    const labelRef = useRef(null);
+
+    const change = e => {
+        if(!isOn){
+            labelRef.current.setAttribute('data-old-color', labelRef.current.style.background);
+            labelRef.current.style.background = onColor;
+        } else {
+            labelRef.current.style.background = labelRef.current.getAttribute('data-old-color');
+        }
+
+        setIsOn(!isOn);
+    }
+
+    return (
+        <div className="cryo-group">
+            <div className="cryo-flex">
+                <div>
+                    <input
+                        checked={isOn}
+                        className="cryo-switch-checkbox cryo-control"
+                        id={`cryo-switch-new`}
+                        type="checkbox"
+                        onChange={change}
+                        name={name}
+                    />
+                    <label
+                        ref={labelRef}
+                        className="cryo-switch-label"
+                        htmlFor={`cryo-switch-new`}
+                    >
+                        <span className={`cryo-switch-button`} />
+                    </label>
+                </div>
+                <div className="cryo-switch-description-wrapper">
+                    <span className="cryo-switch-description">{label}</span>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+CryoSwitch.propTypes = {
+    defaultValue: PropTypes.bool,
+    onColor: PropTypes.string,
+    label: PropTypes.string,
+    name: PropTypes.string
 }

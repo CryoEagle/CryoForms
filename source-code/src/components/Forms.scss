@@ -1,13 +1,10 @@
 $main-color: #ff5722;
+$main-color-hover: #e8572a;
 
 .cryo-group {
     margin-bottom: 20px;
 
-    .cryo-btn{
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-top: 12px;
-        padding-bottom: 12px;
+    .cryo-btn {
         font-family: Roboto, sans-serif;
         border: 0;
         outline: none;
@@ -15,13 +12,32 @@ $main-color: #ff5722;
         font-size: 14px;
         font-weight: 500;
         line-height: 22.4px;
-    }
-
-    .cryo-btn-primary{
-        background-color: $main-color;
-        color: white;
         &:hover{
             cursor: pointer;
+        }
+    }
+
+    .cryo-btn-casual {
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .cryo-btn-sm {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+    .cryo-btn-primary {
+        background-color: $main-color;
+        color: white;
+        transition: background-color 0.3s ease;
+
+        &:hover{
+            background-color: $main-color-hover;
         }
     }
 
@@ -33,7 +49,7 @@ $main-color: #ff5722;
 .cryo-input {
     font-family: Roboto, sans-serif;
 
-    .cryo-error-mess{
+    .cryo-error-mess {
         display: 'none';
         overflow: 'hidden'; 
         color: rgba(224, 74, 74, .6);
@@ -67,13 +83,13 @@ $main-color: #ff5722;
 
     div {
         margin-bottom: 10px;
-        span{
+        span {
             color: red;
             position: inline;
         }
     }
 
-    .input{
+    .input {
         display: flex;
         flex-wrap: wrap-reverse;
     }
@@ -81,18 +97,91 @@ $main-color: #ff5722;
     input:focus {
         outline: none;
 
-        + div{
-            span{
-                label{
+        + div {
+            span {
+                label {
                     color: $main-color;
                 }
             }
         }
     }
 
-    .cryo-description{
+    input:hover {
+        + div {
+            span {
+                label {
+                    color: $main-color;
+                }
+            }
+        }
+    }
+
+    .cryo-description {
         position: block;
         margin-top: 2px;
         color:rgba(0, 0, 0, 0.4);
     }
+}
+
+.cryo-flex{
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.cryo-switch-checkbox {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    display: block;
+}
+
+.cryo-switch-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 45px;
+    height: 30px;
+    background: grey;
+    border-radius: 100px;
+    position: relative;
+    transition: background-color .2s;
+}
+
+.cryo-switch-label .cryo-switch-button {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 25px;
+    height: 25px;
+    border-radius: 45px;
+    transition: 0.2s;
+    background: #fff;
+    box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+}
+
+.cryo-switch-checkbox:checked + .cryo-switch-label .cryo-switch-button {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+}
+
+.cryo-switch-label:active .cryo-switch-button {
+    width: 35px;
+}
+
+.cryo-switch-description {
+    font-family: Roboto, sans-serif;
+    color: rgba(0, 0, 0, 0.6);
+    padding-left: 10px;
+    padding-top: 5px;
+    top: 50%;
+    position: absolute;
+    width: 100%;
+    transform: translateY(-50%);
+}
+
+.cryo-switch-description-wrapper{
+    position: relative;
+    width: 100%;
 }
