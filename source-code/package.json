@@ -1,6 +1,6 @@
 {
   "name": "cryoforms",
-  "version": "1.0.8-alpha",
+  "version": "1.1.0-alpha",
   "description": "Manage your forms easier",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

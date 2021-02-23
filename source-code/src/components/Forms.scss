@@ -185,3 +185,7 @@ $main-color-hover: #e8572a;
     position: relative;
     width: 100%;
 }
+
+body.drag * {
+    pointer-events: none !important;
+}

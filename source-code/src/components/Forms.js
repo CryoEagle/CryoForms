@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import uuid from 'react-uuid';
 import './Forms.scss';
 import PropTypes from 'prop-types';
+import FileDropZone from './FileDropZone';
 
 export const cryoUseForm = () => {
     const [formData, setFormData] = useState({});
@@ -324,4 +325,20 @@ CryoSwitch.propTypes = {
     onColor: PropTypes.string,
     label: PropTypes.string,
     name: PropTypes.string
+}
+
+export const CryoFileDropZone = (props) => {
+    return (
+        <FileDropZone {...props} />
+    )
+}
+
+CryoFileDropZone.propTypes = {
+    highlightFunction: PropTypes.func,
+    unHighlightFunction: PropTypes.func,
+    name: PropTypes.string,
+    multiFile: PropTypes.bool,
+    multiFileErrorHandle: PropTypes.func,
+    multiFileMoreFilesEnterHandle: PropTypes.func,
+    mouseLeaveHandle: PropTypes.func
 }
