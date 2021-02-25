@@ -20,7 +20,7 @@ export const cryoUseForm = () => {
     return  [{form: formData, setData: setFormData, ...formFunctions}];
 }
 
-export const CryoForm = ({successFunc = () => {}, failedFunc = () => {}, children, form = null}) => {
+export const CryoForm = ({successFuncJson = null, successFuncFormData = null, failedFunc = () => {}, children, form = null}) => {
     const formRef = useRef(null);
 
     useEffect(() => {
@@ -35,8 +35,10 @@ export const CryoForm = ({successFunc = () => {}, failedFunc = () => {}, childre
         e.preventDefault();
         
         let inputs = Array.from(formRef.current.querySelectorAll('.cryo-control'));
-        let formValue = {};
         let failed = false;
+
+        let formValue = {};
+        let formData = new FormData();
 
         for(let i = 0; i < inputs.length; i++){
             let event = new CustomEvent('validate');
@@ -50,16 +52,39 @@ export const CryoForm = ({successFunc = () => {}, failedFunc = () => {}, childre
             
             if(inputs[i] && inputs[i].classList.contains('cryo-input')) {
                 formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].value}
+                formData.append(inputs[i].getAttribute('name'), inputs[i].value);
                 continue;
             }
 
             if(inputs[i] && inputs[i].classList.contains('cryo-switch-checkbox')){
                 formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].checked}
+                formData.append(inputs[i].getAttribute('name'), inputs[i].checked);
+                continue;
+            }
+
+            if(inputs[i] && inputs[i].classList.contains('cryo-file-input')) {
+                let filesAttribute = inputs[i].getAttribute('data-files');
+                let files = [];
+                if(filesAttribute){
+                    files = inputs[i].getAttribute('data-files').split(',');
+                    files.map((fileItem, index) => {
+                        formData.append(`${inputs[i].getAttribute('name')}_${index}`, fileItem);
+                    });
+                }
+
+                formValue = {...formValue, [inputs[i].getAttribute('name')]: files}
                 continue;
             }
         }
+        if(!failed) {
+            if(successFuncJson){
+                successFuncJson(formValue);
+            }
 
-        if(!failed) successFunc(formValue);
+            if(successFuncFormData){
+                successFuncFormData(formData);
+            }
+        }
     } 
 
     return (
@@ -70,7 +95,8 @@ export const CryoForm = ({successFunc = () => {}, failedFunc = () => {}, childre
 }
 
 CryoForm.propTypes = {
-    successFunc: PropTypes.func,
+    successFuncJson: PropTypes.func,
+    successFuncFormData: PropTypes.func,
     failedFunc: PropTypes.func,
     children: PropTypes.arrayOf(PropTypes.element),
     form: PropTypes.object
@@ -78,24 +104,24 @@ CryoForm.propTypes = {
 
 const ruleRequired = (inputEl, errorEl, mess) => {
     if(inputEl.value == ""){
-        inputEl.setAttribute("error", mess);
+        inputEl.setAttribute('error', mess);
         errorEl.style.display = 'block';
         errorEl.innerHTML = mess;
         return true;
     } else {
-        inputEl.removeAttribute("error");
+        inputEl.removeAttribute('error');
         errorEl.style.display = 'none';
     }
 }
 
 const ruleMinLength = (inputEl, errorEl, mess, length) => {
     if(inputEl.value.length < length){
-        inputEl.setAttribute("error", mess);
+        inputEl.setAttribute('error', mess);
         errorEl.style.display = 'block';
         errorEl.innerHTML = mess;
         return true;
     } else {
-        inputEl.removeAttribute("error");
+        inputEl.removeAttribute('error');
         errorEl.style.display = 'none';
     }
 }
@@ -140,7 +166,7 @@ export const CryoInput = ({defaultValue, label, placeholder, name, description, 
             if(rule.required){
                 error = ruleRequired(inputRef.current, errorMessRef.current, rule.errorMessage);
                 if (error) {
-                    onNotValidChange(inputRef.current, errorMessRef.current, rule.errorMessage);
+                    onNotValidChange(inputRef, errorMessRef, rule.errorMessage);
                     return true;
                 };
             }
@@ -148,7 +174,7 @@ export const CryoInput = ({defaultValue, label, placeholder, name, description, 
             if(rule.type){
                 error = ruleType(inputRef.current, errorMessRef.current, rule.errorMessage, rule.type);
                 if (error) {
-                    onNotValidChange(inputRef.current, errorMessRef.current, rule.errorMessage);
+                    onNotValidChange(inputRef, errorMessRef, rule.errorMessage);
                     return true;
                 };
             }
@@ -156,14 +182,14 @@ export const CryoInput = ({defaultValue, label, placeholder, name, description, 
             if(rule.minLength){
                 error = ruleMinLength(inputRef.current, errorMessRef.current, rule.errorMessage, rule.minLength);
                 if(error) {
-                    onNotValidChange(inputRef.current, errorMessRef.current, rule.errorMessage);
+                    onNotValidChange(inputRef, errorMessRef, rule.errorMessage);
                     return true;
                 }
             }
         });
 
         if(!error){
-            onValidChange(inputRef.current, errorMessRef.current);
+            onValidChange(inputRef, errorMessRef);
         }
     }
 
@@ -334,11 +360,12 @@ export const CryoFileDropZone = (props) => {
 }
 
 CryoFileDropZone.propTypes = {
-    highlightFunction: PropTypes.func,
-    unHighlightFunction: PropTypes.func,
+    mouseEnterHandler: PropTypes.func,
+    mouseLeaveHandler: PropTypes.func,
     name: PropTypes.string,
     multiFile: PropTypes.bool,
-    multiFileErrorHandle: PropTypes.func,
-    multiFileMoreFilesEnterHandle: PropTypes.func,
-    mouseLeaveHandle: PropTypes.func
+    multiFileErrorHandler: PropTypes.func,
+    rules: PropTypes.array,
+    onNotValidChange: PropTypes.func,
+    onChange: PropTypes.func
 }

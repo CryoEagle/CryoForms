@@ -1,22 +1,42 @@
 import React, { useRef, useEffect } from 'react';
 
-const FileDropZone = ({children, highlightFunction = () => {}, unHighlightFunction = () => {}, multiFile = true, multiFileErrorHandle = () => {}, multiFileMoreFilesEnterHandle = () => {}, mouseLeaveHandle = () => {}}) => {
-    const dropZoneRef = useRef(null);
-
-    const mouseLeave = () => {
-        mouseLeaveHandle();
+const ruleFileRequired = (dropZoneEl, errorMess) => {
+    let filesAttribute = dropZoneEl.getAttribute('data-files');
+    let files = [];
+    if(filesAttribute){
+        files = dropZoneEl.getAttribute('data-files').split(',');
     }
 
+    if(files.length == 0) {
+        dropZoneEl.setAttribute('error', errorMess);
+        return true;
+    } else {
+        dropZoneEl.removeAttribute('error');
+    }
+}
+
+const FileDropZone = ({name, children, mouseEnterHandler = () => {}, mouseLeaveHandler = () => {}, multiFile = true, multiFileErrorHandler = () => {}, rules = [], onNotValidChange = () => {}, onChange = () => {}}) => {
+    const dropZoneRef = useRef(null);
+
     const highlight = () => {
-        highlightFunction();
+        mouseEnterHandler();
     }
 
     const unhighlight = () => {
-        unHighlightFunction();
+        mouseLeaveHandler();
     }
 
     const handleFiles = files => {
-        console.log(files);
+        let filesString = "";
+        Array.from(files).forEach((item, index) => {
+            filesString += URL.createObjectURL(item);
+            if(files.length - 1 > index){
+                filesString += ",";
+            }
+        });
+
+        dropZoneRef.current.setAttribute("data-files", filesString);
+        onChange(files, filesString);
     }
 
     const handleDrop = (e) => {
@@ -24,11 +44,24 @@ const FileDropZone = ({children, highlightFunction = () => {}, unHighlightFuncti
         let files = dt.files;
 
         if(!multiFile && files.length != 1){
-            multiFileErrorHandle();
+            multiFileErrorHandler();
             return;
         }
 
         handleFiles(files);
+        checkRules();
+    }
+
+    const checkRules = () => {
+        rules.some((item) => {
+            if(item.required){
+                let error = ruleFileRequired(dropZoneRef.current, item.errorMessage);
+                if(error) {
+                    onNotValidChange(dropZoneRef);
+                    return true;
+                }
+            }
+        });
     }
 
     const preventDefaults = e => {
@@ -49,11 +82,12 @@ const FileDropZone = ({children, highlightFunction = () => {}, unHighlightFuncti
             dropZoneRef.current.addEventListener(eventName, unhighlight, false)
         });
 
-        dropZoneRef.current.addEventListener('drop', handleDrop, false)
+        dropZoneRef.current.addEventListener('drop', handleDrop, false);
+        dropZoneRef.current.addEventListener('validate', checkRules, false);
     }, []);
 
     return (
-        <div className="cryo-group" ref={dropZoneRef} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave}>
+        <div name={name} className="cryo-group cryo-control cryo-file-input" ref={dropZoneRef}>
             {children}
         </div>
     )
