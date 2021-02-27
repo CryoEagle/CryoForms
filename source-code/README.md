@@ -2,8 +2,6 @@
 
 Thank you for choosing **CryoForms**. This document will help you to start using **CryoForms**. Please note that **CryoForms** is still in alpha phase, so this document may be updated in future version-ups, in project there are lot's of components missing, this release is just for testing, choosing right start with developing core of project.
 
-
-
 ## 🌟 Effective Usage
 
 You should use it in projects and places where you want real-time validating user inputs, this means user, or administrator have better feelings when using your application, we want give developer ability to complete modify our components outside of core, so he could completely manage behaviors of components like colors, appearance when typing not valid input.

@@ -15,7 +15,7 @@ const ruleFileRequired = (dropZoneEl, errorMess) => {
     }
 }
 
-const FileDropZone = ({name, children, mouseEnterHandler = () => {}, mouseLeaveHandler = () => {}, multiFile = true, multiFileErrorHandler = () => {}, rules = [], onNotValidChange = () => {}, onChange = () => {}}) => {
+const FileDropZone = ({name, children, mouseEnterHandler = () => {}, mouseLeaveHandler = () => {}, multiFile = true, multiFileErrorHandler = () => {}, rules = [], onNotValidChange = () => {}, onChange = () => {}, browseFileOnClick = true}) => {
     const dropZoneRef = useRef(null);
 
     const highlight = () => {
@@ -84,10 +84,19 @@ const FileDropZone = ({name, children, mouseEnterHandler = () => {}, mouseLeaveH
 
         dropZoneRef.current.addEventListener('drop', handleDrop, false);
         dropZoneRef.current.addEventListener('validate', checkRules, false);
+
+        if(browseFileOnClick) {
+            dropZoneRef.current.addEventListener('click', () => {
+                dropZoneRef.current.children[0].click();
+            }, false);
+        }
     }, []);
 
     return (
-        <div name={name} className="cryo-group cryo-control cryo-file-input" ref={dropZoneRef}>
+        <div name={name} className={`cryo-group cryo-control cryo-file-input ${browseFileOnClick ? 'cryo-hover-pointer' : ''}`} ref={dropZoneRef}>
+            {browseFileOnClick && (
+                <input onChange={event => handleFiles(event.target.files)} style={{display: 'none'}} type="file" />
+            )}
             {children}
         </div>
     )

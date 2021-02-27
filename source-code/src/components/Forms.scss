@@ -140,12 +140,13 @@ $main-color-hover: #e8572a;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    width: 45px;
+    width: 50px;
     height: 30px;
     background: grey;
     border-radius: 100px;
     position: relative;
     transition: background-color .2s;
+    top: 0;
 }
 
 .cryo-switch-label .cryo-switch-button {
@@ -174,14 +175,18 @@ $main-color-hover: #e8572a;
     font-family: Roboto, sans-serif;
     color: rgba(0, 0, 0, 0.6);
     padding-left: 10px;
-    padding-top: 5px;
     top: 50%;
+    transform: translateY(-50%);
     position: absolute;
     width: 100%;
-    transform: translateY(-50%);
+    display: block;
 }
 
 .cryo-switch-description-wrapper{
     position: relative;
     width: 100%;
+}
+
+.cryo-hover-pointer:hover {
+    cursor: pointer;
 }
