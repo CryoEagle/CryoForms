@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import uuid from 'react-uuid';
 
 const ruleRequired = (inputEl, errorEl, mess) => {
@@ -52,12 +52,19 @@ const ruleType = (inputEl, errorEl, mess, type) => {
     }
 }
 
-const Input = ({defaultValue, label, placeholder, name, description, type, rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}}) => {
+const DefaultFileUploadRightSide = ({fileInputRightSideText = "Choose file"}) => {
+    return (
+        <div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.4)', borderRadius: '0 4px 4px 0'}} className="cryo-hover-pointer"><span style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', whiteSpace: 'nowrap', color: 'white'}}>{fileInputRightSideText}</span></div>
+    )
+}
+
+const Input = ({defaultValue, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText}) => {
     const id = uuid();
-    const innerType = (type == undefined ? "text" : type)
+    const innerType = type;
 
     const inputRef = useRef(null);
     const errorMessRef = useRef(null);
+    const fileInputRef = useRef(null);
 
     const checkRules = () => {
         let error = false;
@@ -93,11 +100,19 @@ const Input = ({defaultValue, label, placeholder, name, description, type, rows 
     }
 
     const getInputClassName = () => {
+        let classes = "";
+
         if(inputProps.className){
-            return `cryo-control cryo-input ${inputProps.className}`;
+            classes += `cryo-control cryo-input ${inputProps.className}`;
         } else {
-            return `cryo-control cryo-input`;
+            classes += `cryo-control cryo-input`;
         }
+
+        if(innerType == 'file'){
+            classes += ' cryo-hover-pointer cryo-file-input';
+        }
+
+        return classes;
     }
 
     const getId = () => {
@@ -126,15 +141,38 @@ const Input = ({defaultValue, label, placeholder, name, description, type, rows 
         }
     }, []);
 
+    const openFile = () => {
+        fileInputRef.current.click();
+    }
+
+    const fileInputChange = e => {
+        let files = e.target.files;
+        if(files.length != 0){
+            inputRef.current.value = files[0].name;
+            inputRef.current.setAttribute('data-file-blob', URL.createObjectURL(files[0]));
+        }
+    }
+
     return (
         <div className={`cryo-inline cryo-group cryo-input`}>
             <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess ${(errorMessProps.className ? errorMessProps.className : "")}`}></small>
             <div className="input">
-                {innerType != "textarea" ? (
+                {(innerType == 'text' || innerType ==  'password') && (
                     <input ref={inputRef} {...inputProps} {...inputData} autoComplete={autoComplete} />
-                ) : (
+                )}
+
+                {innerType == 'textarea' && (
                     <textarea ref={inputRef} {...inputProps} {...inputData} />
                 )}
+                
+                {innerType == 'file' && (
+                    <div style={{display: 'flex', flexWrap: 'nowrap', width: '100%'}} onClick={openFile}>
+                        <input ref={inputRef} {...inputProps} {...inputData} type="text" disabled={true} autoComplete={autoComplete} style={{width: '70%', borderRadius: '4px 0 0 4px'}} />
+                        <div style={{width: '30%', height: '100%', position: 'relative'}}><DefaultFileUploadRightSide fileInputRightSideText={fileInputRightSideText} /></div>
+                        <input onChange={fileInputChange} ref={fileInputRef} type="file" style={{display: 'none'}} />
+                    </div>
+                )}
+
                 {label && (
                     <div>
                         <span><label htmlFor={id}>{label}</label> {rules.some(() => item => item.required == true) && <span>*</span>}</span>

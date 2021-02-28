@@ -30,7 +30,7 @@ const Form = ({successFuncJson = null, successFuncFormData = null, failedFunc = 
                 failed = true;
             }
             
-            if(inputs[i] && inputs[i].classList.contains('cryo-input')) {
+            if(inputs[i] && inputs[i].classList.contains('cryo-input') && !inputs[i].classList.contains('cryo-file-input')) {
                 formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].value}
                 formData.append(inputs[i].getAttribute('name'), inputs[i].value);
                 continue;
@@ -42,7 +42,7 @@ const Form = ({successFuncJson = null, successFuncFormData = null, failedFunc = 
                 continue;
             }
 
-            if(inputs[i] && inputs[i].classList.contains('cryo-file-input')) {
+            if(inputs[i] && inputs[i].classList.contains('cryo-file-input-dnd')) {
                 let filesAttribute = inputs[i].getAttribute('data-files');
                 let files = [];
                 if(filesAttribute){

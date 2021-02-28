@@ -93,7 +93,7 @@ const FileDropZone = ({name, children, mouseEnterHandler = () => {}, mouseLeaveH
     }, []);
 
     return (
-        <div name={name} className={`cryo-group cryo-control cryo-file-input ${browseFileOnClick ? 'cryo-hover-pointer' : ''}`} ref={dropZoneRef}>
+        <div name={name} className={`cryo-group cryo-control cryo-file-input-dnd ${browseFileOnClick ? 'cryo-hover-pointer' : ''}`} ref={dropZoneRef}>
             {browseFileOnClick && (
                 <input onChange={event => handleFiles(event.target.files)} style={{display: 'none'}} type="file" />
             )}

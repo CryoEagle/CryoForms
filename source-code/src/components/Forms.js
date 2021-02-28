@@ -57,7 +57,8 @@ CryoInput.propTypes = {
     onNotValidChange: PropTypes.func,
     onValidChange: PropTypes.func,
     descriptionProps: PropTypes.object,
-    defaultValue: PropTypes.string
+    defaultValue: PropTypes.string,
+    fileInputRightSideText: PropTypes.string
 }
 
 export const CryoButton = (props) => {
