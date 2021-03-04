@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
+import Group from './HOC/Group';
 
-const Switch = ({defaultValue, onColor = '#ff5722', label, name}) => {
+const Switch = ({defaultValue, onColor = '#ff5722', label, name, onChange, disallowFormGroup}) => {
     const [isOn, setIsOn] = useState(defaultValue ? defaultValue : false);
     const labelRef = useRef(null);
 
@@ -13,10 +14,11 @@ const Switch = ({defaultValue, onColor = '#ff5722', label, name}) => {
         }
 
         setIsOn(!isOn);
+        onChange(!isOn);
     }
 
     return (
-        <div className="cryo-group">
+        <Group disallowFormGroup={disallowFormGroup}>
             <div className="cryo-flex">
                 <input
                     checked={isOn}
@@ -37,7 +39,7 @@ const Switch = ({defaultValue, onColor = '#ff5722', label, name}) => {
                     <span className="cryo-switch-description">{label}</span>
                 </div>
             </div>
-        </div>
+        </Group>
     )
 }
 

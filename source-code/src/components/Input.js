@@ -1,15 +1,29 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import uuid from 'react-uuid';
+import Group from './HOC/Group';
+import Editor from './CryoRichTextEditor/Editor';
 
-const ruleRequired = (inputEl, errorEl, mess) => {
-    if(inputEl.value == ""){
-        inputEl.setAttribute('error', mess);
-        errorEl.style.display = 'block';
-        errorEl.innerHTML = mess;
-        return true;
+const ruleRequired = (inputEl, errorEl, mess, fileInput) => {
+    if(!inputEl.classList.contains('cryo-file-input')){
+        if(inputEl.value == ""){
+            inputEl.setAttribute('error', mess);
+            errorEl.style.display = 'block';
+            errorEl.innerHTML = mess;
+            return true;
+        } else {
+            inputEl.removeAttribute('error');
+            errorEl.style.display = 'none';
+        }
     } else {
-        inputEl.removeAttribute('error');
-        errorEl.style.display = 'none';
+        if(fileInput.current.files.length == 0){
+            inputEl.setAttribute('error', mess);
+            errorEl.style.display = 'block';
+            errorEl.innerHTML = mess;
+            return true;
+        } else {
+            inputEl.removeAttribute('error');
+            errorEl.style.display = 'none';
+        }
     }
 }
 
@@ -58,7 +72,9 @@ const DefaultFileUploadRightSide = ({fileInputRightSideText = "Choose file"}) =>
     )
 }
 
-const Input = ({defaultValue, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText}) => {
+const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText, disallowFormGroup}) => {
+    const [valueState, setValueState] = useState((defaultValue ? defaultValue : value));
+    
     const id = uuid();
     const innerType = type;
 
@@ -70,7 +86,7 @@ const Input = ({defaultValue, label, placeholder, name, description, type = 'tex
         let error = false;
         rules.some((rule) => {
             if(rule.required){
-                error = ruleRequired(inputRef.current, errorMessRef.current, rule.errorMessage);
+                error = ruleRequired(inputRef.current, errorMessRef.current, rule.errorMessage, fileInputRef);
                 if (error) {
                     onNotValidChange(inputRef, errorMessRef, rule.errorMessage);
                     return true;
@@ -123,6 +139,11 @@ const Input = ({defaultValue, label, placeholder, name, description, type = 'tex
         }
     }
 
+    const inputChange = e => {
+        setValueState(e.target.value);
+        onChange(e);
+    }
+
     let inputData = {
         className: getInputClassName(),
         id: getId(),
@@ -130,8 +151,9 @@ const Input = ({defaultValue, label, placeholder, name, description, type = 'tex
         name: name,
         type: innerType,
         rows: rows,
-        onInput: checkRules,
-        onBlur: checkRules
+        onInput: e => { checkRules(); inputChange(e) },
+        onBlur: checkRules,
+        value: valueState
     }
 
     useEffect(() => {
@@ -148,41 +170,48 @@ const Input = ({defaultValue, label, placeholder, name, description, type = 'tex
     const fileInputChange = e => {
         let files = e.target.files;
         if(files.length != 0){
+            onChange(files[0]);
             inputRef.current.value = files[0].name;
             inputRef.current.setAttribute('data-file-blob', URL.createObjectURL(files[0]));
         }
     }
 
     return (
-        <div className={`cryo-inline cryo-group cryo-input`}>
-            <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess ${(errorMessProps.className ? errorMessProps.className : "")}`}></small>
-            <div className="input">
-                {(innerType == 'text' || innerType ==  'password') && (
-                    <input ref={inputRef} {...inputProps} {...inputData} autoComplete={autoComplete} />
-                )}
+        <Group disallowFormGroup={disallowFormGroup}>
+            <div className={`cryo-inline cryo-input`}>
+                <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess ${!label ? 'cryo-mb': ''} ${(errorMessProps.className ? errorMessProps.className : '')}`}></small>
+                <div className="cryo-input">
+                    {(innerType == 'text' || innerType ==  'password') && (
+                        <input ref={inputRef} {...inputProps} {...inputData} autoComplete={autoComplete} />
+                    )}
 
-                {innerType == 'textarea' && (
-                    <textarea ref={inputRef} {...inputProps} {...inputData} />
-                )}
-                
-                {innerType == 'file' && (
-                    <div style={{display: 'flex', flexWrap: 'nowrap', width: '100%'}} onClick={openFile}>
-                        <input ref={inputRef} {...inputProps} {...inputData} type="text" disabled={true} autoComplete={autoComplete} style={{width: '70%', borderRadius: '4px 0 0 4px'}} />
-                        <div style={{width: '30%', height: '100%', position: 'relative'}}><DefaultFileUploadRightSide fileInputRightSideText={fileInputRightSideText} /></div>
-                        <input onChange={fileInputChange} ref={fileInputRef} type="file" style={{display: 'none'}} />
-                    </div>
-                )}
+                    {innerType == 'textarea' && (
+                        <textarea ref={inputRef} {...inputProps} {...inputData} />
+                    )}
 
-                {label && (
-                    <div>
-                        <span><label htmlFor={id}>{label}</label> {rules.some(() => item => item.required == true) && <span>*</span>}</span>
-                    </div>
+                    {innerType == 'richtext' && (
+                        <Editor inputRef={inputRef} inputProps={{...inputProps}} inputdata={{...inputData}} />
+                    )}
+                    
+                    {innerType == 'file' && (
+                        <div style={{display: 'flex', flexWrap: 'nowrap', width: '100%'}} onClick={openFile}>
+                            <input ref={inputRef} {...inputProps} {...inputData} type="text" disabled={true} autoComplete={autoComplete} style={{width: '70%', borderRadius: '4px 0 0 4px'}} />
+                            <div style={{width: '30%', height: '100%', position: 'relative'}}><DefaultFileUploadRightSide fileInputRightSideText={fileInputRightSideText} /></div>
+                            <input onChange={fileInputChange} ref={fileInputRef} type="file" style={{display: 'none'}} />
+                        </div>
+                    )}
+
+                    {label && (
+                        <div className="cryo-label">
+                            <span><label htmlFor={id}>{label}</label> {rules.some(() => item => item.required == true) && <span>*</span>}</span>
+                        </div>
+                    )}
+                </div>
+                {description && (
+                    <small {...descriptionProps} className={`cryo-description ${(descriptionProps.className ? descriptionProps.className : "")}`}>{description} </small>
                 )}
             </div>
-            {description && (
-                <small {...descriptionProps} className={`cryo-description ${(descriptionProps.className ? descriptionProps.className : "")}`}>{description} </small>
-            )}
-        </div>
+        </Group>
     )
 }
 

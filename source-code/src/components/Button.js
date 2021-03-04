@@ -1,6 +1,7 @@
 import React from 'react';
+import Group from './HOC/Group';
 
-const Button = ({children, block = false, buttonProps = {}, color, size = "casual"}) => {
+const Button = ({children, block = false, buttonProps = {}, color, size = "casual", disallowFormGroup}) => {
 
     const setClassNames = () => {
         let classes = "";
@@ -24,9 +25,9 @@ const Button = ({children, block = false, buttonProps = {}, color, size = "casua
     const classNames = setClassNames();
 
     return (
-        <div className="cryo-group">
-            <button type="submit" className={`cryo-btn ${classNames}`}>{children}</button>
-        </div>
+        <Group disallowFormGroup={disallowFormGroup}>
+            <button {...buttonProps} type="submit" className={`cryo-btn ${classNames}`}>{children}</button>
+        </Group>
     )
 }
 

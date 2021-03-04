@@ -58,7 +58,10 @@ CryoInput.propTypes = {
     onValidChange: PropTypes.func,
     descriptionProps: PropTypes.object,
     defaultValue: PropTypes.string,
-    fileInputRightSideText: PropTypes.string
+    fileInputRightSideText: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+    disallowFormGroup: PropTypes.bool
 }
 
 export const CryoButton = (props) => {
@@ -71,7 +74,8 @@ CryoButton.propTypes = {
     block: PropTypes.bool,
     buttonProps: PropTypes.object,
     color: PropTypes.string,
-    size: PropTypes.string
+    size: PropTypes.string,
+    disallowFormGroup: PropTypes.bool
 }
 
 export const CryoSwitch = (props) => {
@@ -84,7 +88,9 @@ CryoSwitch.propTypes = {
     defaultValue: PropTypes.bool,
     onColor: PropTypes.string,
     label: PropTypes.string,
-    name: PropTypes.string
+    name: PropTypes.string,
+    onChange: PropTypes.func,
+    disallowFormGroup: PropTypes.bool
 }
 
 export const CryoFileDropZone = (props) => {
@@ -102,5 +108,6 @@ CryoFileDropZone.propTypes = {
     rules: PropTypes.array,
     onNotValidChange: PropTypes.func,
     onChange: PropTypes.func,
-    browseFileOnClick: PropTypes.bool
+    browseFileOnClick: PropTypes.bool,
+    disallowFormGroup: PropTypes.bool
 }

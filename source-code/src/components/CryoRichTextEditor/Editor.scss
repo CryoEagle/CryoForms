@@ -1,0 +1,23 @@
+.cryo-richtext {
+    width: 100%;
+    
+    &:focus {
+        outline: none;
+    }
+
+    &:empty:before {
+        content: 'hello';
+        color: gray;
+    }
+
+    &:empty:hover::before {
+        cursor: text;
+    }
+}
+
+
+.cryo-in-text-toolbar {
+    position: absolute;
+    left: 0;
+    top: 0;
+}

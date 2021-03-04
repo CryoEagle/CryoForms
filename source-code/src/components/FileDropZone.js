@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import Group from './HOC/Group';
 
 const ruleFileRequired = (dropZoneEl, errorMess) => {
     let filesAttribute = dropZoneEl.getAttribute('data-files');
@@ -15,7 +16,7 @@ const ruleFileRequired = (dropZoneEl, errorMess) => {
     }
 }
 
-const FileDropZone = ({name, children, mouseEnterHandler = () => {}, mouseLeaveHandler = () => {}, multiFile = true, multiFileErrorHandler = () => {}, rules = [], onNotValidChange = () => {}, onChange = () => {}, browseFileOnClick = true}) => {
+const FileDropZone = ({name, children, mouseEnterHandler = () => {}, mouseLeaveHandler = () => {}, multiFile = true, multiFileErrorHandler = () => {}, rules = [], onNotValidChange = () => {}, onChange = () => {}, browseFileOnClick = true, disallowFormGroup}) => {
     const dropZoneRef = useRef(null);
 
     const highlight = () => {
@@ -93,12 +94,14 @@ const FileDropZone = ({name, children, mouseEnterHandler = () => {}, mouseLeaveH
     }, []);
 
     return (
-        <div name={name} className={`cryo-group cryo-control cryo-file-input-dnd ${browseFileOnClick ? 'cryo-hover-pointer' : ''}`} ref={dropZoneRef}>
-            {browseFileOnClick && (
-                <input onChange={event => handleFiles(event.target.files)} style={{display: 'none'}} type="file" />
-            )}
-            {children}
-        </div>
+        <Group disallowFormGroup={disallowFormGroup}>
+            <div name={name} className={`cryo-control cryo-file-input-dnd ${browseFileOnClick ? 'cryo-hover-pointer' : ''}`} ref={dropZoneRef}>
+                {browseFileOnClick && (
+                    <input onChange={event => handleFiles(event.target.files)} style={{display: 'none'}} type="file" />
+                )}
+                {children}
+            </div>
+        </Group>
     )
 }
 

@@ -42,6 +42,12 @@ const Form = ({successFuncJson = null, successFuncFormData = null, failedFunc = 
                 continue;
             }
 
+            if(inputs[i] && inputs[i].classList.contains('cryo-file-input')){
+                formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].getAttribute('data-file-blob')}
+                formData.append(inputs[i].getAttribute('name'), inputs[i].getAttribute('data-file-blob'));
+                continue;
+            }
+
             if(inputs[i] && inputs[i].classList.contains('cryo-file-input-dnd')) {
                 let filesAttribute = inputs[i].getAttribute('data-files');
                 let files = [];
@@ -56,6 +62,7 @@ const Form = ({successFuncJson = null, successFuncFormData = null, failedFunc = 
                 continue;
             }
         }
+        
         if(!failed) {
             if(successFuncJson){
                 successFuncJson(formValue);
