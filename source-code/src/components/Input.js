@@ -50,23 +50,23 @@ const ruleType = (inputEl, errorEl, mess, type) => {
         return re.test(number);
     }
     
-    if(type == "email" && !validateEmail(inputEl.value)){
-        inputEl.setAttribute("error", mess);
+    if(type == 'email' && !validateEmail(inputEl.value)){
+        inputEl.setAttribute('error', mess);
         errorEl.style.display = 'block';
         errorEl.innerHTML = mess;
         return true;
-    } else if (type == "number" && !validateNumber(inputEl.value)){
-        inputEl.setAttribute("error", mess);
+    } else if (type == 'number' && !validateNumber(inputEl.value)){
+        inputEl.setAttribute('error', mess);
         errorEl.style.display = 'block';
         errorEl.innerHTML = mess;
         return true;
     } else {
-        inputEl.removeAttribute("error");
+        inputEl.removeAttribute('error');
         errorEl.style.display = 'none';
     }
 }
 
-const DefaultFileUploadRightSide = ({fileInputRightSideText = "Choose file"}) => {
+const DefaultFileUploadRightSide = ({fileInputRightSideText = 'Choose file'}) => {
     return (
         <div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.4)', borderRadius: '0 4px 4px 0'}} className="cryo-hover-pointer"><span style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', whiteSpace: 'nowrap', color: 'white'}}>{fileInputRightSideText}</span></div>
     )
@@ -157,7 +157,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
     }
 
     useEffect(() => {
-        inputRef.current.addEventListener("validate", checkRules, false);
+        inputRef.current.addEventListener('validate', checkRules, false);
         if(defaultValue) {
             inputRef.current.value = defaultValue;
         }
@@ -202,7 +202,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
                     )}
 
                     {label && (
-                        <div className="cryo-label">
+                        <div className='cryo-label'>
                             <span><label htmlFor={id}>{label}</label> {rules.some(() => item => item.required == true) && <span>*</span>}</span>
                         </div>
                     )}
