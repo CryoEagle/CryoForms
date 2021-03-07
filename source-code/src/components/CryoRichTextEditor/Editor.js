@@ -39,6 +39,10 @@ const Editor = ({inputRef, height = '100px', showToolbar = false, showInTextTool
     }
 
     const mouseDown = e => {
+        if(inTextToolbarRef.current){
+            inTextToolbarRef.current.style.pointerEvents = 'none';
+        }
+
         let rect = e.target.getBoundingClientRect();
         let x = e.clientX - rect.left;
 
@@ -46,7 +50,23 @@ const Editor = ({inputRef, height = '100px', showToolbar = false, showInTextTool
     }
 
     const mouseUp = e => {
+        if(inTextToolbarRef.current){
+            inTextToolbarRef.current.style.pointerEvents = 'auto';
+        }
+
         setSelectData({...selectData, mouseDown: false});
+    }
+
+    const toolbarFunctions = {
+        bold: () => {
+            document.execCommand('bold');
+        },
+        italic: () => {
+            document.execCommand('italic');
+        },
+        underline: () => {
+            document.execCommand('underline');
+        }
     }
 
     const textSelectedHandler = e => {
@@ -68,6 +88,16 @@ const Editor = ({inputRef, height = '100px', showToolbar = false, showInTextTool
     }
 
     useEffect(() => {
+        document.onmouseup = () => {
+            setTimeout(() => {
+                mouseUp();
+            }, 5);
+        }
+
+        document.ondrag = () => {
+            mouseUp();
+        }
+
         document.onclick = () => {
             let selectedText = getSelection();
             if(inTextToolbarRef.current && selectedText.type == 'Caret') {
@@ -85,7 +115,7 @@ const Editor = ({inputRef, height = '100px', showToolbar = false, showInTextTool
             )}
 
             {showInTextToolbar && (
-                <InTextToolbar toolbarRef={inTextToolbarRef} />
+                <InTextToolbar toolbarFunctions={toolbarFunctions} toolbarRef={inTextToolbarRef} />
             )}
 
             <div

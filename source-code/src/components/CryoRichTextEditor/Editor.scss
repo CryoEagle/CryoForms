@@ -14,7 +14,7 @@
         cursor: text;
     }
 
-    line-height: 30px;
+    line-height: 20px;
 }
 
 
@@ -35,7 +35,7 @@
     user-select: none;
     opacity: 0;
     transition: .3s ease opacity;
-    pointer-events:none;
+    pointer-events: none;
 }
 
 .cryo-in-text-toolbar-item {

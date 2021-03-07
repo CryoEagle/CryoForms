@@ -1,17 +1,19 @@
 import React from 'react';
 
-const InTextToolbar = ({toolbarRef}) => {
+const InTextToolbar = ({toolbarRef, toolbarFunctions}) => {
+    
+
     return (
         <div ref={toolbarRef} className='cryo-in-text-toolbar'>
-            <div className='cryo-in-text-toolbar-item'>
+            <div className='cryo-in-text-toolbar-item' onClick={toolbarFunctions.bold}>
                 <span><b>B</b></span>
             </div>
 
-            <div className='cryo-in-text-toolbar-item'>
+            <div className='cryo-in-text-toolbar-item' onClick={toolbarFunctions.italic}>
                 <span><i>I</i></span>
             </div>
 
-            <div className='cryo-in-text-toolbar-item'>
+            <div className='cryo-in-text-toolbar-item' onClick={toolbarFunctions.underline}>
                 <span style={{textDecoration: 'underline'}}>U</span>
             </div>
 
