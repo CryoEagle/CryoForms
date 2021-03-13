@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import './Forms.scss';
 import PropTypes from 'prop-types';
 import FileDropZone from './FileDropZone';
@@ -6,6 +6,8 @@ import Form from './Form';
 import Input from './Input';
 import Button from './Button';
 import Switch from './Switch';
+import Select from './Select/Select';
+import Option from './Select/Option';
 
 export const cryoUseForm = () => {
     const [formData, setFormData] = useState({});
@@ -61,7 +63,8 @@ CryoInput.propTypes = {
     fileInputRightSideText: PropTypes.string,
     value: PropTypes.string,
     onChange: PropTypes.func,
-    disallowFormGroup: PropTypes.bool
+    disallowFormGroup: PropTypes.bool,
+    quillModules: PropTypes.object
 }
 
 export const CryoButton = (props) => {
@@ -110,4 +113,30 @@ CryoFileDropZone.propTypes = {
     onChange: PropTypes.func,
     browseFileOnClick: PropTypes.bool,
     disallowFormGroup: PropTypes.bool
+}
+
+export const CryoSelect = (props) => {
+    return (
+        <Select {...props} />
+    )
+}
+
+CryoSelect.propTypes = {
+    label: PropTypes.string,
+    rules: PropTypes.array,
+    multiSelect: PropTypes.bool,
+    title: PropTypes.string,
+    maxHeight: PropTypes.number
+}
+
+export const CryoOption = (props) => {
+    return (
+        <Option {...props} />
+    )
+}
+
+CryoOption.propTypes = {
+    value: PropTypes.any,
+    selectedBackgroundColor: PropTypes.string,
+    selectedColor: PropTypes.string
 }

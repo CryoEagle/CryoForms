@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import uuid from 'react-uuid';
 import Group from './HOC/Group';
-import Editor from './CryoRichTextEditor/Editor';
+import RichTextEditor from './RichTextEditor/RichTextEditor';
 
 const ruleRequired = (inputEl, errorEl, mess, fileInput) => {
     if(!inputEl.classList.contains('cryo-file-input')){
@@ -72,7 +72,7 @@ const DefaultFileUploadRightSide = ({fileInputRightSideText = 'Choose file'}) =>
     )
 }
 
-const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText, disallowFormGroup}) => {
+const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText, disallowFormGroup, quillModules}) => {
     const [valueState, setValueState] = useState((defaultValue ? defaultValue : value));
     
     const id = uuid();
@@ -144,6 +144,11 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
         onChange(e);
     }
 
+    const inputRichTextChange = value => {
+        setValueState(value);
+        onChange(value);
+    }
+
     let inputData = {
         className: getInputClassName(),
         id: getId(),
@@ -151,7 +156,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
         name: name,
         type: innerType,
         rows: rows,
-        onInput: e => { checkRules(); inputChange(e) },
+        onInput: (innerType != 'richtext' ? e => { inputChange(e); checkRules(); } : value => { inputRichTextChange(value); checkRules(); }),
         onBlur: checkRules,
         value: valueState
     }
@@ -169,7 +174,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
 
     const fileInputChange = e => {
         let files = e.target.files;
-        if(files.length != 0){
+        if(files.length != 0) {
             onChange(files[0]);
             inputRef.current.value = files[0].name;
             inputRef.current.setAttribute('data-file-blob', URL.createObjectURL(files[0]));
@@ -190,7 +195,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
                     )}
 
                     {innerType == 'richtext' && (
-                        <Editor inputRef={inputRef} inputProps={{...inputProps}} inputdata={{...inputData}} />
+                        <RichTextEditor inputRef={inputRef} inputProps={{...inputProps}} inputdata={{...inputData}} quillModules={quillModules} />
                     )}
                     
                     {innerType == 'file' && (
