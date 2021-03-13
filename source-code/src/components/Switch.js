@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
 import Group from './HOC/Group';
+import uuid from 'react-uuid';
 
-const Switch = ({defaultValue, onColor = '#ff5722', label, name, onChange, disallowFormGroup}) => {
+const Switch = ({defaultValue = false, onColor = '#ff5722', label, name = '', onChange = () => {}, disallowFormGroup = false}) => {
     const [isOn, setIsOn] = useState(defaultValue ? defaultValue : false);
     const labelRef = useRef(null);
 
@@ -17,26 +18,28 @@ const Switch = ({defaultValue, onColor = '#ff5722', label, name, onChange, disal
         onChange(!isOn);
     }
 
+    const id = uuid();
+
     return (
         <Group disallowFormGroup={disallowFormGroup}>
-            <div className="cryo-flex">
+            <div className='cryo-flex'>
                 <input
                     checked={isOn}
-                    className="cryo-switch-checkbox cryo-control"
-                    id={`cryo-switch-new`}
-                    type="checkbox"
+                    className='cryo-switch-checkbox cryo-control'
+                    id={id}
+                    type='checkbox'
                     onChange={change}
                     name={name}
                 />
                 <label
                     ref={labelRef}
-                    className="cryo-switch-label"
-                    htmlFor={`cryo-switch-new`}
+                    className='cryo-switch-label'
+                    htmlFor={id}
                 >
                     <span className={`cryo-switch-button`} />
                 </label>
-                <div className="cryo-switch-description-wrapper">
-                    <span className="cryo-switch-description">{label}</span>
+                <div className='cryo-switch-description-wrapper'>
+                    <span className='cryo-switch-description'>{label}</span>
                 </div>
             </div>
         </Group>

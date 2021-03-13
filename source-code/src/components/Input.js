@@ -158,7 +158,8 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
         rows: rows,
         onInput: (innerType != 'richtext' ? e => { inputChange(e); checkRules(); } : value => { inputRichTextChange(value); checkRules(); }),
         onBlur: checkRules,
-        value: valueState
+        value: valueState,
+        onChange: (inputProps.onChange ? inputProps.onChange : () => {})
     }
 
     useEffect(() => {
