@@ -14,10 +14,11 @@ export const cryoUseForm = () => {
 
     const formFunctions = {
         clearInputs: () => {
-            let inputs = Array.from(formData.formRef.current.querySelectorAll('.cryo-control'));
+            let inputs = Array.from(formData.formRef.current.querySelectorAll('.cryo-event-hook'));
 
             inputs.some((input) => {
-                input.value = "";
+                let event = new CustomEvent('resetField');
+                input.dispatchEvent(event);
             });
         }
     };
@@ -126,7 +127,8 @@ CryoSelect.propTypes = {
     rules: PropTypes.array,
     multiSelect: PropTypes.bool,
     title: PropTypes.string,
-    maxHeight: PropTypes.number
+    maxHeight: PropTypes.number,
+    disallowFormGroup: PropTypes.bool
 }
 
 export const CryoOption = (props) => {

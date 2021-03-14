@@ -39,6 +39,18 @@ const ruleMinLength = (inputEl, errorEl, mess, length) => {
     }
 }
 
+const ruleMaxLength = (inputEl, errorEl, mess, length) => {
+    if(inputEl.value.length > length){
+        inputEl.setAttribute('error', mess);
+        errorEl.style.display = 'block';
+        errorEl.innerHTML = mess;
+        return true;
+    } else {
+        inputEl.removeAttribute('error');
+        errorEl.style.display = 'none';
+    }
+}
+
 const ruleType = (inputEl, errorEl, mess, type) => {
     const validateEmail = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -85,7 +97,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
     const checkRules = () => {
         let error = false;
         rules.some((rule) => {
-            if(rule.required){
+            if(rule.required) {
                 error = ruleRequired(inputRef.current, errorMessRef.current, rule.errorMessage, fileInputRef);
                 if (error) {
                     onNotValidChange(inputRef, errorMessRef, rule.errorMessage);
@@ -93,7 +105,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
                 };
             }
 
-            if(rule.type){
+            if(rule.type) {
                 error = ruleType(inputRef.current, errorMessRef.current, rule.errorMessage, rule.type);
                 if (error) {
                     onNotValidChange(inputRef, errorMessRef, rule.errorMessage);
@@ -101,8 +113,16 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
                 };
             }
 
-            if(rule.minLength){
+            if(rule.minLength) {
                 error = ruleMinLength(inputRef.current, errorMessRef.current, rule.errorMessage, rule.minLength);
+                if(error) {
+                    onNotValidChange(inputRef, errorMessRef, rule.errorMessage);
+                    return true;
+                }
+            }
+
+            if(rule.maxLength) {
+                error = ruleMaxLength(inputRef.current, errorMessRef.current, rule.errorMessage, rule.maxLength);
                 if(error) {
                     onNotValidChange(inputRef, errorMessRef, rule.errorMessage);
                     return true;
@@ -119,13 +139,13 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
         let classes = "";
 
         if(inputProps.className){
-            classes += `cryo-control cryo-input ${inputProps.className}`;
+            classes += `cryo-control cryo-event-hook cryo-input ${inputProps.className}`;
         } else {
-            classes += `cryo-control cryo-input`;
+            classes += `cryo-control cryo-event-hook cryo-input`;
         }
 
         if(innerType == 'file'){
-            classes += ' cryo-hover-pointer cryo-file-input';
+            classes += ' cryo-hover-pointer cryo-event-hook cryo-file-input';
         }
 
         return classes;
@@ -162,8 +182,18 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
         onChange: (inputProps.onChange ? inputProps.onChange : () => {})
     }
 
+    const resetField = () => {
+        errorMessRef.current.style.display = 'none';
+        inputRef.current.value = '';
+        if(fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    }
+
     useEffect(() => {
         inputRef.current.addEventListener('validate', checkRules, false);
+        inputRef.current.addEventListener('resetField', resetField, false);
+        
         if(defaultValue) {
             inputRef.current.value = defaultValue;
         }

@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import SelectContext from './SelectContext';
+import Group from '../HOC/Group';
 
-const Select = ({label = '', rules = [], children, multiSelect = false, title = '', maxHeight = '200px'}) => {
+const Select = ({label = '', rules = [], children, multiSelect = false, title = '', maxHeight = '200px', disallowFormGroup}) => {
 
     const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -58,7 +59,7 @@ const Select = ({label = '', rules = [], children, multiSelect = false, title = 
     }
 
     return (
-        <div className='cryo-group'>
+        <Group disallowFormGroup={disallowFormGroup}>
             {label && (
                 <div>
                     <span className='cryo-label-global'><label>{label}</label> {rules.some(() => item => item.required == true) && <span>*</span>}</span>
@@ -73,7 +74,7 @@ const Select = ({label = '', rules = [], children, multiSelect = false, title = 
                     </div>
                 </SelectContext.Provider>
             </div>
-        </div>
+        </Group>
     )
 }
 
