@@ -187,6 +187,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
         inputRef.current.value = '';
         if(fileInputRef.current) {
             fileInputRef.current.value = '';
+            setValueState('');
         }
     }
 
@@ -212,9 +213,16 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
         }
     }
 
+    const richTextResetField = () => {
+        setValueState('');
+        setTimeout(() => {
+            errorMessRef.current.style.display = 'none';
+        });
+    }
+
     return (
         <Group disallowFormGroup={disallowFormGroup}>
-            <div className={`cryo-inline cryo-input`}>
+            <div className={`cryo-input`}>
                 <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess ${!label ? 'cryo-mb': ''} ${(errorMessProps.className ? errorMessProps.className : '')}`}></small>
                 <div className="cryo-input">
                     {(innerType == 'text' || innerType ==  'password') && (
@@ -226,7 +234,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
                     )}
 
                     {innerType == 'richtext' && (
-                        <RichTextEditor inputRef={inputRef} inputProps={{...inputProps}} inputdata={{...inputData}} quillModules={quillModules} />
+                        <RichTextEditor resetFieldHandler={richTextResetField} inputRef={inputRef} inputProps={{...inputProps}} inputdata={{...inputData}} quillModules={quillModules} />
                     )}
                     
                     {innerType == 'file' && (

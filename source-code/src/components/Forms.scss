@@ -122,6 +122,19 @@ $main-color-hover: #e8572a;
         margin-top: 2px;
         color:rgba(0, 0, 0, 0.4);
     }
+
+    textarea {
+        display: block;
+        width: 100%;
+        border-radius: 4px;
+        border: 1px solid #eaf1f1;
+        border-color: #eaf1f1 #e4eded #dbe7e7;
+        padding: 10px;
+
+        &:focus {
+            outline: none;
+        }
+    }
 }
 
 .cryo-flex{
