@@ -19,7 +19,7 @@ const RichTextEditor = ({inputRef, height = '100px', inputProps, inputdata, quil
 
     return (
         <div style={{width: '100%', minHeight: height}}>
-            <input className='cryo-event-hook' ref={inputRef} style={{display: 'none'}} />
+            <input className='cryo-event-hook cryo-input cryo-control' ref={inputRef} style={{display: 'none'}} name={inputdata.name} />
 
             <ReactQuill 
                 value={inputdata.value}
