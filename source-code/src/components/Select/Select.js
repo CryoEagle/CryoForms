@@ -2,9 +2,10 @@ import React, { useRef, useState } from 'react';
 import SelectContext from './SelectContext';
 import Group from '../HOC/Group';
 
-const Select = ({label = '', rules = [], children, multiSelect = false, title = '', maxHeight = '200px', disallowFormGroup}) => {
+const Select = ({label = '', rules = [], children, multiSelect = false, title = '', maxHeight = '300px', disallowFormGroup}) => {
 
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectedRef, setSelectedRef] = useState(null);
 
     const setArrayToTitle = (newSelectedOptions) => {
         let textForTitleReplace = '';
@@ -21,7 +22,7 @@ const Select = ({label = '', rules = [], children, multiSelect = false, title = 
 
     const optionSelected = (value, htmlTextContent) => {
         let newSelectedOptions = [...selectedOptions, {value: value, textContent: htmlTextContent}];
-        setSelectedOptions(newSelectedOptions);
+        setSelectedOptions([newSelectedOptions]);
 
         if(!multiSelect) {
             optionsTitleRef.current.textContent = htmlTextContent;
@@ -60,19 +61,21 @@ const Select = ({label = '', rules = [], children, multiSelect = false, title = 
 
     return (
         <Group disallowFormGroup={disallowFormGroup}>
-            {label && (
-                <div>
-                    <span className='cryo-label-global'><label>{label}</label> {rules.some(() => item => item.required == true) && <span>*</span>}</span>
-                </div>
-            )}
-
-            <button ref={optionsTitleRef} className='cryo-select' type='button' onClick={openOptions}>{title}</button>
-            <div className='cryo-select-options' ref={optionsRef}>
-                <SelectContext.Provider value={{optionSelected: optionSelected, optionUnselected: optionUnselected, multiSelect: multiSelect, optionsSelected: selectedOptions}}>
-                    <div className='cryo-select-options-wrap' style={{maxHeight: maxHeight}}>
-                        {children}
+            <div style={{position: 'relative'}}>
+                {label && (
+                    <div>
+                        <span className='cryo-label-global'><label>{label}</label> {rules.some(() => item => item.required == true) && <span>*</span>}</span>
                     </div>
-                </SelectContext.Provider>
+                )}
+
+                <button ref={optionsTitleRef} className='cryo-select' type='button' onClick={openOptions}>{title}</button>
+                <div className='cryo-select-options' ref={optionsRef}>
+                    <SelectContext.Provider value={{optionSelected: optionSelected, optionUnselected: optionUnselected, multiSelect: multiSelect, optionsSelected: selectedOptions, getSelectedRef: selectedRef, setSelectedRef: setSelectedRef}}>
+                        <div className='cryo-select-options-wrap' style={{maxHeight: maxHeight}}>
+                            {children}
+                        </div>
+                    </SelectContext.Provider>
+                </div>
             </div>
         </Group>
     )

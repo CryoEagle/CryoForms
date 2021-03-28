@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import SelectContext from './SelectContext';
 
-const Option = ({children, value, selectedBackgroundColor = '#e8572a', selectedColor = '#fff', submitAsArray = false}) => {
+const Option = ({children, value, selectedBackgroundColor = '#e8572a', selectedColor = '#fff'}) => {
     const [defaultCss, setDefaultCss] = useState({color: null, backgroundColor: null, selected: false});
     const optionRef = useRef(null);
 
@@ -16,10 +16,27 @@ const Option = ({children, value, selectedBackgroundColor = '#e8572a', selectedC
                 // logic
                 setDefaultCss({...defaultCss, selected: true});
                 contextData.optionSelected(value, optionRef.current.textContent);
+                contextData.setSelectedRef(optionRef);
             }
 
-            if(!contextData.multiSelect && contextData.optionsSelected.length < 1) { 
-                select();
+            if(!contextData.multiSelect) { 
+                const unselectOldOption = () => {
+                    console.log('teču sem');
+                    let oldRef = contextData.getSelectedRef;
+                    if(oldRef && oldRef.current) {
+                        console.log(oldRef.current);
+                        oldRef.current.style.backgroundColor = defaultCss.backgroundColor;
+                        oldRef.current.style.color = defaultCss.color;
+                        setDefaultCss({...defaultCss, selected: false});
+                        oldRef.current.classList.remove('cryo-select-option-selected');
+                    }
+                }
+
+                unselectOldOption();
+                
+                setTimeout(() => {
+                    select();
+                });
             } else if (contextData.multiSelect) {
                 select();
             }
@@ -29,7 +46,6 @@ const Option = ({children, value, selectedBackgroundColor = '#e8572a', selectedC
             optionRef.current.style.color = defaultCss.color;
             setDefaultCss({...defaultCss, selected: false});
             optionRef.current.classList.remove('cryo-select-option-selected');
-
             // logic
             contextData.optionUnselected(value);
         }

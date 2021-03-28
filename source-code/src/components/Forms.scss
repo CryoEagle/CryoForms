@@ -259,7 +259,6 @@ $main-color-hover: #e8572a;
     border-color: #eaf1f1 #e4eded #dbe7e7 #e4eded;
     border-radius: 4px;
     background-color: #fff;
-    display: none;
     overflow: hidden;
     font-size: 14px;
     overflow: hidden;
@@ -267,8 +266,7 @@ $main-color-hover: #e8572a;
     .cryo-select-option {
         padding: 10px;
         padding-left: 15px;
-        color: rgba(0,0,0,.6);
-        background-color: white;
+        
         transition: .3s ease background-color, .3s ease color;
 
         &:hover {

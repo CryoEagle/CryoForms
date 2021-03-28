@@ -6,8 +6,8 @@ import Form from './Form';
 import Input from './Input';
 import Button from './Button';
 import Switch from './Switch';
-import Select from './Select/Select';
-import Option from './Select/Option';
+import Select from './SelectNew/Select';
+import Option from './SelectNew/Option';
 
 export const cryoUseForm = () => {
     const [formData, setFormData] = useState({});
