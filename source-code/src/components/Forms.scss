@@ -46,14 +46,14 @@ $main-color-hover: #e8572a;
     width: 100%;
 }
 
+.cryo-error-mess {
+    display: 'none';
+    overflow: 'hidden'; 
+    color: rgba(224, 74, 74, .6);
+}
+
 .cryo-input {
     font-family: Roboto, sans-serif;
-
-    .cryo-error-mess {
-        display: 'none';
-        overflow: 'hidden'; 
-        color: rgba(224, 74, 74, .6);
-    }
 
     label {
         font-size: 12px;

@@ -1,67 +1,62 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import SelectContext from './SelectContext';
 import Group from '../HOC/Group';
 
-const Select = ({label = '', rules = [], children, multiSelect = false, title = '', maxHeight = '300px', disallowFormGroup}) => {
+const Select = ({disallowFormGroup, label, rules = [], title = '', children, multiSelect, maxHeight = 300, onChange = () => {}, errorMessProps = {}}) => {
+    const optionsTitleRef = useRef(null);
+    const errorMessRef = useRef(null);
 
-    const [selectedOptions, setSelectedOptions] = useState([]);
-    const [selectedRef, setSelectedRef] = useState(null);
+    const [optionsOpened, setOptionsOpened] = useState(false);
+    const [valuesSelected, setValuesSelected] = useState([]);
+    const [usableValue, setUsableValue] = useState('');
 
-    const setArrayToTitle = (newSelectedOptions) => {
-        let textForTitleReplace = '';
+    const openOptions = () => {
+        setOptionsOpened(!optionsOpened);
+    }
 
-        newSelectedOptions.forEach((item, index) => {
-            textForTitleReplace += item.textContent;
-            if(index < newSelectedOptions.length - 1) {
-                textForTitleReplace += ', ';
+    const setValues = (value) => {
+        if(valuesSelected.includes(value)){
+            setValuesSelected(valuesSelected.filter((item) => { return item != value }));
+            return;
+        }
+
+        if(!multiSelect) {
+            setValuesSelected([value]);
+        } else {
+            setValuesSelected([...valuesSelected, value]);
+        }
+    }
+
+    const removeValue = (value) => {
+        setValuesSelected(valuesSelected.filter((item) => { return item != value }));
+    }
+
+    const checkRules = () => {
+        
+    }
+
+    useEffect(() => {
+        let newValue = '';
+
+        valuesSelected.forEach((item, index) => {
+            newValue += item;
+            if(index < valuesSelected.length -1) {
+                newValue += ',';
             }
         });
 
-        optionsTitleRef.current.textContent = textForTitleReplace;
-    }
-
-    const optionSelected = (value, htmlTextContent) => {
-        let newSelectedOptions = [...selectedOptions, {value: value, textContent: htmlTextContent}];
-        setSelectedOptions([newSelectedOptions]);
-
-        if(!multiSelect) {
-            optionsTitleRef.current.textContent = htmlTextContent;
-        } else {
-            setArrayToTitle(newSelectedOptions);
-        }
-    }
-
-    const optionUnselected = (value) => {
-        let newSelectedOptions = selectedOptions.filter((item) => { return item.value != value });
-        setSelectedOptions(newSelectedOptions);
-
-        if(!multiSelect) {
-            optionsTitleRef.current.textContent = title;
-        } else {
-            if(newSelectedOptions != 0) {
-                setArrayToTitle(newSelectedOptions);
-            } else {
-                optionsTitleRef.current.textContent = title;
-            }
-        }
-    }
-    
-    const optionsRef = useRef(null);
-    const optionsTitleRef = useRef(null);
-
-    const openOptions = () => {
-        if(optionsRef.current.style.display == 'none' || optionsRef.current.style.display == '') {
-            optionsRef.current.style.display = 'block';
-            optionsRef.current.style.opacity = '1';
-        } else {
-            optionsRef.current.style.display = 'none';
-            optionsRef.current.style.opacity = '0';
-        }
-    }
+        setUsableValue(newValue);
+        onChange(valuesSelected);
+        setTimeout(() => {
+            checkRules();
+        });
+    }, [valuesSelected]);
 
     return (
         <Group disallowFormGroup={disallowFormGroup}>
+            <input value={usableValue} className='cryo-control cryo-select' style={{display: 'none'}} value={usableValue} />
             <div style={{position: 'relative'}}>
+                <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess cryo-mb ${(errorMessProps.className ? errorMessProps.className : '')}`}></small>
                 {label && (
                     <div>
                         <span className='cryo-label-global'><label>{label}</label> {rules.some(() => item => item.required == true) && <span>*</span>}</span>
@@ -69,13 +64,16 @@ const Select = ({label = '', rules = [], children, multiSelect = false, title = 
                 )}
 
                 <button ref={optionsTitleRef} className='cryo-select' type='button' onClick={openOptions}>{title}</button>
-                <div className='cryo-select-options' ref={optionsRef}>
-                    <SelectContext.Provider value={{optionSelected: optionSelected, optionUnselected: optionUnselected, multiSelect: multiSelect, optionsSelected: selectedOptions, getSelectedRef: selectedRef, setSelectedRef: setSelectedRef}}>
-                        <div className='cryo-select-options-wrap' style={{maxHeight: maxHeight}}>
-                            {children}
-                        </div>
-                    </SelectContext.Provider>
-                </div>
+                
+                {optionsOpened && (
+                    <div className='cryo-select-options'>
+                        <SelectContext.Provider value={{selectedValues: valuesSelected, setValueHandler: setValues, removeValueHandler: removeValue}}>
+                            <div className='cryo-select-options-wrap' style={{maxHeight: maxHeight}}>
+                                {children}
+                            </div>
+                        </SelectContext.Provider>
+                    </div>
+                )}
             </div>
         </Group>
     )

@@ -1,5 +1,5 @@
 import { createContext } from 'react';
 
-const SelectContext = createContext({optionSelected: () => {}, optionUnselected: () => {}, multiSelect: false, optionsSelected: [], selectedRefData: {}});
+const SelectContext = createContext({selectedValues: [], setValueHandler: () => {}, removeValueHandler: () => {}});
 
 export default SelectContext;

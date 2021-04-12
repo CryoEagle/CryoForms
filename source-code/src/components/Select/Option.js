@@ -1,80 +1,61 @@
 import React, { useRef, useState, useEffect } from 'react';
 import SelectContext from './SelectContext';
 
-const Option = ({children, value, selectedBackgroundColor = '#e8572a', selectedColor = '#fff'}) => {
-    const [defaultCss, setDefaultCss] = useState({color: null, backgroundColor: null, selected: false});
+
+const Option = ({value, children, selectedBackgroundColor = '#e8572a', selectedColor = '#fff'}) => {
+
+    const [valueState, setValueState] = useState(value);
+    const [defaultCss, setDefaultCss] = useState({});
+
     const optionRef = useRef(null);
-
-    const optionSelected = (contextData) => {
-        if(!defaultCss.selected) {
-            const select = () => {
-                // styling
-                optionRef.current.style.backgroundColor = selectedBackgroundColor;
-                optionRef.current.style.color = selectedColor;
-                optionRef.current.classList.add('cryo-select-option-selected');
-
-                // logic
-                setDefaultCss({...defaultCss, selected: true});
-                contextData.optionSelected(value, optionRef.current.textContent);
-                contextData.setSelectedRef(optionRef);
-            }
-
-            if(!contextData.multiSelect) { 
-                const unselectOldOption = () => {
-                    console.log('teču sem');
-                    let oldRef = contextData.getSelectedRef;
-                    if(oldRef && oldRef.current) {
-                        console.log(oldRef.current);
-                        oldRef.current.style.backgroundColor = defaultCss.backgroundColor;
-                        oldRef.current.style.color = defaultCss.color;
-                        setDefaultCss({...defaultCss, selected: false});
-                        oldRef.current.classList.remove('cryo-select-option-selected');
-                    }
-                }
-
-                unselectOldOption();
-                
-                setTimeout(() => {
-                    select();
-                });
-            } else if (contextData.multiSelect) {
-                select();
-            }
-        } else {
-            // styling
-            optionRef.current.style.backgroundColor = defaultCss.backgroundColor;
-            optionRef.current.style.color = defaultCss.color;
-            setDefaultCss({...defaultCss, selected: false});
-            optionRef.current.classList.remove('cryo-select-option-selected');
-            // logic
-            contextData.optionUnselected(value);
-        }
-    }
 
     const mouseEnter = () => {
         optionRef.current.style.backgroundColor = selectedBackgroundColor;
         optionRef.current.style.color = selectedColor;
     }
 
-    const mouseLeave = () => {
-        if(!defaultCss.selected) {
+    const mouseLeave = (dataFromSelect) => {
+        if(!dataFromSelect.selectedValues.includes(valueState)) {
             optionRef.current.style.backgroundColor = defaultCss.backgroundColor;
             optionRef.current.style.color = defaultCss.color;
         }
     }
 
+    const optionSelected = (dataFromSelect) => {
+        dataFromSelect.setValueHandler(valueState);
+
+        if(dataFromSelect.selectedValues.includes(valueState)) {
+            setTimeout(() => {
+                optionRef.current.style.color = defaultCss.color;
+            });
+        }
+    }
+
+    // if value empty, take value from children
+    useEffect(() => {
+        if(!value){
+            setValueState(optionRef.current.textContent);
+        }
+    }, []);
+
+    // save default css
     useEffect(() => {
         if(optionRef.current.style.color == ''){
             optionRef.current.style.color = 'rgba(0,0,0,.6)';
         }
 
-        setDefaultCss({backgroundColor: optionRef.current.style.backgroundColor, color: optionRef.current.style.color, selected: false});
+        setDefaultCss({backgroundColor: optionRef.current.style.backgroundColor, color: optionRef.current.style.color});
     }, []);
+
+    const selectedStyle = {
+        backgroundColor: selectedBackgroundColor,
+        color: selectedColor
+    }
 
     return (
         <SelectContext.Consumer>
             {(contextData) => (
-                <div onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} ref={optionRef} className='cryo-select-option' onClick={() => optionSelected(contextData)}>{children}</div>
+                <div style={contextData.selectedValues.includes(valueState) ? selectedStyle : {}} onMouseEnter={mouseEnter} onMouseLeave={() => mouseLeave(contextData)} ref={optionRef} className={`cryo-select-option`} onClick={() => optionSelected(contextData)}>{children}</div>
             )}
         </SelectContext.Consumer>
     )

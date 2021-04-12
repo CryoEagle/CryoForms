@@ -6,8 +6,8 @@ import Form from './Form';
 import Input from './Input';
 import Button from './Button';
 import Switch from './Switch';
-import Select from './SelectNew/Select';
-import Option from './SelectNew/Option';
+import Select from './Select/Select';
+import Option from './Select/Option';
 
 export const cryoUseForm = () => {
     const [formData, setFormData] = useState({});
@@ -79,7 +79,8 @@ CryoButton.propTypes = {
     buttonProps: PropTypes.object,
     color: PropTypes.string,
     size: PropTypes.string,
-    disallowFormGroup: PropTypes.bool
+    disallowFormGroup: PropTypes.bool,
+    onClick: PropTypes.func
 }
 
 export const CryoSwitch = (props) => {
