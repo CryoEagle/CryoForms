@@ -15,16 +15,16 @@ const Option = ({value, children, selectedBackgroundColor = '#e8572a', selectedC
     }
 
     const mouseLeave = (dataFromSelect) => {
-        if(!dataFromSelect.selectedValues.includes(valueState)) {
+        if(!dataFromSelect.selectedValues.find(obj => { return obj.value == valueState })) {
             optionRef.current.style.backgroundColor = defaultCss.backgroundColor;
             optionRef.current.style.color = defaultCss.color;
         }
     }
 
     const optionSelected = (dataFromSelect) => {
-        dataFromSelect.setValueHandler(valueState);
+        dataFromSelect.setValueHandler(valueState, optionRef.current.textContent);
 
-        if(dataFromSelect.selectedValues.includes(valueState)) {
+        if(dataFromSelect.selectedValues.find(obj => { return obj.value == valueState })) {
             setTimeout(() => {
                 optionRef.current.style.color = defaultCss.color;
             });
@@ -55,7 +55,7 @@ const Option = ({value, children, selectedBackgroundColor = '#e8572a', selectedC
     return (
         <SelectContext.Consumer>
             {(contextData) => (
-                <div style={contextData.selectedValues.includes(valueState) ? selectedStyle : {}} onMouseEnter={mouseEnter} onMouseLeave={() => mouseLeave(contextData)} ref={optionRef} className={`cryo-select-option`} onClick={() => optionSelected(contextData)}>{children}</div>
+                <div style={contextData.selectedValues.find(obj => { return obj.value == valueState }) ? selectedStyle : {}} onMouseEnter={mouseEnter} onMouseLeave={() => mouseLeave(contextData)} ref={optionRef} className={`cryo-select-option`} onClick={() => optionSelected(contextData)}>{children}</div>
             )}
         </SelectContext.Consumer>
     )

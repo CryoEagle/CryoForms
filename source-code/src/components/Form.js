@@ -24,7 +24,7 @@ const Form = ({successFuncJson = null, successFuncFormData = null, failedFunc = 
             let event = new CustomEvent('validate');
             inputs[i].dispatchEvent(event);
 
-            let error = inputs[i].getAttribute("error");
+            let error = inputs[i].getAttribute('error');
             if(error){
                 failedFunc(error);
                 failed = true;
@@ -43,8 +43,8 @@ const Form = ({successFuncJson = null, successFuncFormData = null, failedFunc = 
             }
 
             if(inputs[i] && inputs[i].classList.contains('cryo-file-input')){
-                formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].getAttribute('data-file-blob')}
-                formData.append(inputs[i].getAttribute('name'), inputs[i].getAttribute('data-file-blob'));
+                formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].parentElement.children[2].files[0]}
+                formData.append(inputs[i].getAttribute('name'), inputs[i].parentElement.children[2].files[0]);
                 continue;
             }
 
@@ -59,6 +59,12 @@ const Form = ({successFuncJson = null, successFuncFormData = null, failedFunc = 
                 }
 
                 formValue = {...formValue, [inputs[i].getAttribute('name')]: files}
+                continue;
+            }
+
+            if(inputs[i] && inputs[i].classList.contains('cryo-select')) {
+                formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].value}
+                formData.append(inputs[i].getAttribute('name'), inputs[i].value);
                 continue;
             }
         }

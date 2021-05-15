@@ -224,7 +224,7 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
         <Group disallowFormGroup={disallowFormGroup}>
             <div className={`cryo-input`}>
                 <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess ${!label ? 'cryo-mb': ''} ${(errorMessProps.className ? errorMessProps.className : '')}`}></small>
-                <div className="cryo-input">
+                <div className='cryo-input'>
                     {(innerType == 'text' || innerType ==  'password') && (
                         <input ref={inputRef} {...inputProps} {...inputData} autoComplete={autoComplete} />
                     )}
@@ -239,9 +239,9 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
                     
                     {innerType == 'file' && (
                         <div style={{display: 'flex', flexWrap: 'nowrap', width: '100%'}} onClick={openFile}>
-                            <input ref={inputRef} {...inputProps} {...inputData} type="text" disabled={true} autoComplete={autoComplete} style={{width: '70%', borderRadius: '4px 0 0 4px'}} />
+                            <input ref={inputRef} {...inputProps} {...inputData} type='text' disabled={true} autoComplete={autoComplete} style={{width: '70%', borderRadius: '4px 0 0 4px'}} />
                             <div style={{width: '30%', height: '100%', position: 'relative'}}><DefaultFileUploadRightSide fileInputRightSideText={fileInputRightSideText} /></div>
-                            <input onChange={fileInputChange} ref={fileInputRef} type="file" style={{display: 'none'}} />
+                            <input onChange={fileInputChange} ref={fileInputRef} type='file' style={{display: 'none'}} />
                         </div>
                     )}
 

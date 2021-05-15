@@ -129,7 +129,8 @@ CryoSelect.propTypes = {
     multiSelect: PropTypes.bool,
     title: PropTypes.string,
     maxHeight: PropTypes.number,
-    disallowFormGroup: PropTypes.bool
+    disallowFormGroup: PropTypes.bool,
+    name: PropTypes.string
 }
 
 export const CryoOption = (props) => {
