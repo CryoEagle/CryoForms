@@ -2,6 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import uuid from 'react-uuid';
 import Group from './HOC/Group';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
+import createFileList from 'create-file-list'
+
+// some enums
+const imageTypes = Object.freeze({'PNG': 'image/png', 'JPG': 'image/jpeg'})
 
 const ruleRequired = (inputEl, errorEl, mess, fileInput) => {
     if(!inputEl.classList.contains('cryo-file-input')){
@@ -197,6 +201,32 @@ const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholde
         
         if(defaultValue) {
             inputRef.current.value = defaultValue;
+        }
+
+        if(innerType == 'file') {
+            if(defaultValue != '') {
+                const getFileExtenstion = (type) => {
+                    console.log(type);
+                    if(type == imageTypes.JPG) {
+                        return '.jpg';
+                    } else if(type == imageTypes.PNG) {
+                        return '.png';
+                    }
+                }
+
+                const getFileName = (ext) => {
+                    return uuid() + ext;
+                }
+
+                fetch(defaultValue).then(res => res.blob()).then(blob => {
+                    let objectURL = URL.createObjectURL(blob);
+                    inputRef.current.setAttribute('data-file-blob', objectURL);
+                    let fileName = getFileName(getFileExtenstion(blob.type));
+                    let file = new File([blob], fileName);
+                    
+                    fileInputRef.current.files = createFileList(file);
+                });
+            }
         }
     }, []);
 

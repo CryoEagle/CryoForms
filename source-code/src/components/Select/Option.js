@@ -55,7 +55,7 @@ const Option = ({value, children, selectedBackgroundColor = '#e8572a', selectedC
     return (
         <SelectContext.Consumer>
             {(contextData) => (
-                <div style={contextData.selectedValues.find(obj => { return obj.value == valueState }) ? selectedStyle : {}} onMouseEnter={mouseEnter} onMouseLeave={() => mouseLeave(contextData)} ref={optionRef} className={`cryo-select-option`} onClick={() => optionSelected(contextData)}>{children}</div>
+                <div data-value={value} style={contextData.selectedValues.find(obj => { return obj.value == valueState }) ? selectedStyle : {}} onMouseEnter={mouseEnter} onMouseLeave={() => mouseLeave(contextData)} ref={optionRef} className={`cryo-select-option`} onClick={() => optionSelected(contextData)}>{children}</div>
             )}
         </SelectContext.Consumer>
     )

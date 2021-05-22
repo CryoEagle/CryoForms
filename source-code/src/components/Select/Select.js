@@ -2,18 +2,29 @@ import React, { useRef, useState, useEffect } from 'react';
 import SelectContext from './SelectContext';
 import Group from '../HOC/Group';
 
-const Select = ({disallowFormGroup, label, rules = [], title = '', children, multiSelect, maxHeight = 300, onChange = () => {}, errorMessProps = {}, name, onNotValidChange = () => {}}) => {
+const Select = ({disallowFormGroup, label, rules = [], title = '', children, multiSelect, maxHeight = 300, onChange = () => {}, errorMessProps = {}, name, onNotValidChange = () => {}, value = []}) => {
     const optionsTitleRef = useRef(null);
     const errorMessRef = useRef(null);
     const inputRef = useRef(null);
+    const parentOfChildrenRef = useRef(null);
+    const optionsRef = useRef(null);
 
     const [optionsOpened, setOptionsOpened] = useState(false);
     const [valuesSelected, setValuesSelected] = useState([]);
     const [usableValue, setUsableValue] = useState('');
     const [realValue, setRealValue] = useState('');
+    const [valueAlreadyChanged, setValueAlreadyChanged] = useState(false);
 
     const openOptions = () => {
-        setOptionsOpened(!optionsOpened);
+        let opened = !optionsOpened;
+
+        if(opened == true) {
+            optionsRef.current.style.display = 'block';
+        } else {
+            optionsRef.current.style.display = 'none';
+        }
+        setValueAlreadyChanged(true);
+        setOptionsOpened(opened);
     }
 
     const setValues = (value, title) => {
@@ -35,7 +46,7 @@ const Select = ({disallowFormGroup, label, rules = [], title = '', children, mul
 
     const checkRules = () => {
         const ruleRequired = (inputEl, errorEl, mess) => {
-            if(valuesSelected.length == 0){
+            if(inputEl.value == ''){
                 inputEl.setAttribute('error', mess);
                 errorEl.style.display = 'block';
                 errorEl.innerHTML = mess;
@@ -63,7 +74,6 @@ const Select = ({disallowFormGroup, label, rules = [], title = '', children, mul
         let newValue = '';
         let realValue = '';
 
-
         valuesSelected.forEach((item, index) => {
             newValue += item.title;
             realValue += item.value;
@@ -82,9 +92,34 @@ const Select = ({disallowFormGroup, label, rules = [], title = '', children, mul
         inputRef.current.addEventListener('validate', checkRules, false);
     }, []);
 
+    useEffect(() => {
+        if(value.length != 0 && !valueAlreadyChanged) {
+            let newValue = '';
+            let realValue = '';
+            let optionsArray = [];
+
+            value.forEach((item, index) => {
+                let optionElement = parentOfChildrenRef.current.querySelector(`[data-value="${item}"]`);
+                if(optionElement) {
+                    let textOfValue = optionElement.textContent;
+                    optionsArray = [...optionsArray, { value: item, title: textOfValue }]
+                    newValue += textOfValue;
+                    realValue += item;
+                    if(index < value.length -1) {
+                        newValue += ', ';
+                        realValue += ', ';
+                    }
+                }
+            });
+            setValuesSelected(optionsArray);
+            setUsableValue(newValue);
+            setRealValue(realValue);
+        }
+    }, [children]);
+
     return (
         <Group disallowFormGroup={disallowFormGroup}>
-            <input ref={inputRef} value={realValue} className='cryo-control cryo-select' style={{display: 'none'}} value={realValue} name={name} />
+            <input ref={inputRef} value={realValue} className='cryo-control cryo-select' style={{display: 'none'}} value={realValue} name={name} onChange={() => {}} />
             <div style={{position: 'relative'}}>
                 <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess cryo-mb ${(errorMessProps.className ? errorMessProps.className : '')}`}></small>
                 {label && (
@@ -95,15 +130,13 @@ const Select = ({disallowFormGroup, label, rules = [], title = '', children, mul
 
                 <button ref={optionsTitleRef} className='cryo-select' type='button' onClick={openOptions}>{valuesSelected.length == 0 ? title : usableValue}</button>
                 
-                {optionsOpened && (
-                    <div className='cryo-select-options'>
-                        <SelectContext.Provider value={{selectedValues: valuesSelected, setValueHandler: setValues, removeValueHandler: removeValue}}>
-                            <div className='cryo-select-options-wrap' style={{maxHeight: maxHeight}}>
-                                {children}
-                            </div>
-                        </SelectContext.Provider>
-                    </div>
-                )}
+                <div className='cryo-select-options' ref={optionsRef} style={{display: 'none'}}>
+                    <SelectContext.Provider value={{selectedValues: valuesSelected, setValueHandler: setValues, removeValueHandler: removeValue}}>
+                        <div ref={parentOfChildrenRef} className='cryo-select-options-wrap' style={{maxHeight: maxHeight}}>
+                            {children}
+                        </div>
+                    </SelectContext.Provider>
+                </div>
             </div>
         </Group>
     )
