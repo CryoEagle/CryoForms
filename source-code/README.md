@@ -1,5 +1,7 @@
 # CryoForms
 
+*__1.1.8-alpha__ bug fixes, more functions, better wiki will come later*
+
 Thank you for choosing **CryoForms**. This document will help you to start using **CryoForms**. Please note that **CryoForms** is still in alpha phase, so this document may be updated in future version-ups, in project there are lot's of components missing, this release is just for testing, choosing right start with developing core of project.
 
 ## 🌟 Effective Usage

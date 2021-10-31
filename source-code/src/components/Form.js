@@ -29,6 +29,12 @@ const Form = ({successFuncJson = null, successFuncFormData = null, failedFunc = 
                 failedFunc(error);
                 failed = true;
             }
+
+            if(inputs[i] && inputs[i].classList.contains('cryo-custom-component')){
+                formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].value}
+                formData.append(inputs[i].getAttribute('name'), inputs[i].value);
+                continue;
+            }
             
             if(inputs[i] && inputs[i].classList.contains('cryo-input') && !inputs[i].classList.contains('cryo-file-input')) {
                 formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].value}
