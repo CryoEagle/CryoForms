@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: CryoForm</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: CryoForm</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>CryoForm<span class="signature">(successFuncJson, successFuncFormData, failedFunc, children, form)</span><span class="type-signature"></span></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    
+    <h4 class="name" id="CryoForm"><span class="type-signature"></span>new CryoForm<span class="signature">(successFuncJson, successFuncFormData, failedFunc, children, form)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Creates Form that can be filled, saved very easilly with realtime input checking.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>successFuncJson</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Function called when inputs are OK and send there json as first parameter. Example: (json) =&gt; {success(json)}</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>successFuncFormData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Function called when inputs are OK and send there FormData as first parameter. Example: (formData) =&gt; {success(formData)}</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>failedFunc</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">failedFunc</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Function called when form is filled wrong and send there error detail as first parameter</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>children</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">component</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Children means component inside like this <CryoForm>...Children...</CryoForm></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>form</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">cryoFormState</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This uses our own hook, you can create that hook like this: const [form] = cryoUseForm();</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Form.js.html">Form.js</a>, <a href="Form.js.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const [form] = cryoUseForm();const success = (json) => { form.clearInputs(); console.log(json.name);}return ( &lt;Form successFuncJson={success}>     &lt;CryoInput label="Name" placeholder="name" name="name"  />  &lt;/Form>)</code></pre>
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CryoForm.html">CryoForm</a></li><li><a href="CryoOption.html">CryoOption</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CryoInput">CryoInput</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Nov 04 2021 12:40:00 GMT+0100 (Středoevropský standardní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
