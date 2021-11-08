@@ -1,4 +1,32 @@
-import React, { useState, createContext } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Forms.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Forms.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, createContext } from 'react';
 import './Forms.scss';
 import PropTypes from 'prop-types';
 import FileDropZone from './FileDropZone';
@@ -26,28 +54,28 @@ export const cryoUseForm = () => {
             let inputs = Array.from(formData.formRef.current.querySelectorAll('.cryo-control'));
             let formValue = {};
 
-            for(let i = 0; i < inputs.length; i++){
-                if(inputs[i] && inputs[i].classList.contains('cryo-custom-component')){
+            for(let i = 0; i &lt; inputs.length; i++){
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-custom-component')){
                     formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].value}
                     continue;
                 }
                 
-                if(inputs[i] && inputs[i].classList.contains('cryo-input') && !inputs[i].classList.contains('cryo-file-input')) {
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-input') &amp;&amp; !inputs[i].classList.contains('cryo-file-input')) {
                     formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].value}
                     continue;
                 }
     
-                if(inputs[i] && inputs[i].classList.contains('cryo-switch-checkbox')){
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-switch-checkbox')){
                     formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].checked}
                     continue;
                 }
     
-                if(inputs[i] && inputs[i].classList.contains('cryo-file-input')){
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-file-input')){
                     formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].parentElement.children[2].files[0]}
                     continue;
                 }
     
-                if(inputs[i] && inputs[i].classList.contains('cryo-file-input-dnd')) {
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-file-input-dnd')) {
                     let filesAttribute = inputs[i].getAttribute('data-files');
                     let files = [];
                     if(filesAttribute){
@@ -58,7 +86,7 @@ export const cryoUseForm = () => {
                     continue;
                 }
     
-                if(inputs[i] && inputs[i].classList.contains('cryo-select')) {
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-select')) {
                     formValue = {...formValue, [inputs[i].getAttribute('name')]: inputs[i].value}
                     continue;
                 }
@@ -71,28 +99,28 @@ export const cryoUseForm = () => {
             let inputs = Array.from(formData.formRef.current.querySelectorAll('.cryo-control'));
             let formDataInner = new FormData();
 
-            for(let i = 0; i < inputs.length; i++){
-                if(inputs[i] && inputs[i].classList.contains('cryo-custom-component')){
+            for(let i = 0; i &lt; inputs.length; i++){
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-custom-component')){
                     formDataInner.append(inputs[i].getAttribute('name'), inputs[i].value);
                     continue;
                 }
                 
-                if(inputs[i] && inputs[i].classList.contains('cryo-input') && !inputs[i].classList.contains('cryo-file-input')) {
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-input') &amp;&amp; !inputs[i].classList.contains('cryo-file-input')) {
                     formDataInner.append(inputs[i].getAttribute('name'), inputs[i].value);
                     continue;
                 }
     
-                if(inputs[i] && inputs[i].classList.contains('cryo-switch-checkbox')){
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-switch-checkbox')){
                     formDataInner.append(inputs[i].getAttribute('name'), inputs[i].checked);
                     continue;
                 }
     
-                if(inputs[i] && inputs[i].classList.contains('cryo-file-input')){
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-file-input')){
                     formDataInner.append(inputs[i].getAttribute('name'), inputs[i].parentElement.children[2].files[0]);
                     continue;
                 }
     
-                if(inputs[i] && inputs[i].classList.contains('cryo-file-input-dnd')) {
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-file-input-dnd')) {
                     let filesAttribute = inputs[i].getAttribute('data-files');
                     let files = [];
                     if(filesAttribute){
@@ -104,7 +132,7 @@ export const cryoUseForm = () => {
                     continue;
                 }
     
-                if(inputs[i] && inputs[i].classList.contains('cryo-select')) {
+                if(inputs[i] &amp;&amp; inputs[i].classList.contains('cryo-select')) {
                     formDataInner.append(inputs[i].getAttribute('name'), inputs[i].value);
                     continue;
                 }
@@ -121,7 +149,7 @@ export const CryoCustomInputSetter = createContext({inputRef: null});
 
 export const CryoForm = (props) => { 
     return (
-        <Form {...props} />
+        &lt;Form {...props} />
     )
 }
 
@@ -145,16 +173,16 @@ CryoForm.propTypes = {
 /**
  * Component that displays basic or advanced input.
  * 
- * @param {{rules: Array.<InputRules>, label: string}} props 
+ * @param {{rules: Array.&lt;InputRules>, label: string}} props 
  * return (
- *  <CryoInput defaultValue={defaultValue} value={value} onChange={onChange} label={label} placeholder={placeholder} name={name} description={description} type={type} rows={rows} rules = {rules} autoComplete={autoComplete} inputProps={inputProps} errorMessProps={errorMessProps} descriptionProps={descriptionProps} onNotValidChange={onNotValidChange} onValidChange={onValidChange} fileInputRightSideText={fileInputRightSideText} disallowFormGroup={disallowFormGroup} quillModules={quillModules} />
+ *  &lt;CryoInput defaultValue={defaultValue} value={value} onChange={onChange} label={label} placeholder={placeholder} name={name} description={description} type={type} rows={rows} rules = {rules} autoComplete={autoComplete} inputProps={inputProps} errorMessProps={errorMessProps} descriptionProps={descriptionProps} onNotValidChange={onNotValidChange} onValidChange={onValidChange} fileInputRightSideText={fileInputRightSideText} disallowFormGroup={disallowFormGroup} quillModules={quillModules} />
  * )
  */
 const CryoInput = (props) => {
     const { defaultValue, value = "", onChange = () => {}, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText, disallowFormGroup, quillModules } = props
 
     return (
-        <Input {...props} />
+        &lt;Input {...props} />
     )
 }
 
@@ -183,7 +211,7 @@ export { CryoInput };
 
 export const CryoButton = (props) => {
     return (
-        <Button {...props} />
+        &lt;Button {...props} />
     )
 }
 
@@ -199,7 +227,7 @@ CryoButton.propTypes = {
 
 export const CryoSwitch = (props) => {
     return (
-        <Switch {...props} />
+        &lt;Switch {...props} />
     )
 }
 
@@ -214,7 +242,7 @@ CryoSwitch.propTypes = {
 
 export const CryoFileDropZone = (props) => {
     return (
-        <FileDropZone {...props} />
+        &lt;FileDropZone {...props} />
     )
 }
 
@@ -233,7 +261,7 @@ CryoFileDropZone.propTypes = {
 
 export const CryoSelect = (props) => {
     return (
-        <Select {...props} />
+        &lt;Select {...props} />
     )
 }
 
@@ -250,7 +278,7 @@ CryoSelect.propTypes = {
 
 export const CryoOption = (props) => {
     return (
-        <Option {...props} />
+        &lt;Option {...props} />
     )
 }
 
@@ -262,7 +290,7 @@ CryoOption.propTypes = {
 
 export const CryoCustomComponent = (props) => {
     return (
-        <CustomComponent {...props} />
+        &lt;CustomComponent {...props} />
     )
 }
 
@@ -271,4 +299,26 @@ CryoCustomComponent.propTypes = {
     children: PropTypes.element,
     onClearInputs: PropTypes.func,
     name: PropTypes.string
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CryoForm.html">CryoForm</a></li><li><a href="CryoOption.html">CryoOption</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CryoInput">CryoInput</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Nov 04 2021 12:40:00 GMT+0100 (Středoevropský standardní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
