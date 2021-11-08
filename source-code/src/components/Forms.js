@@ -9,6 +9,7 @@ import Switch from './Switch';
 import Select from './Select/Select';
 import Option from './Select/Option';
 import CustomComponent from './CustomComponent/CustomComponent';
+import { observer } from 'mobx-react';
 
 export const cryoUseForm = () => {
     const [formData, setFormData] = useState({});
@@ -143,16 +144,10 @@ CryoForm.propTypes = {
  */
 
 /**
- * Component that displays basic or advanced input.
  * 
- * @param {{rules: Array.<InputRules>, label: string}} props 
- * return (
- *  <CryoInput defaultValue={defaultValue} value={value} onChange={onChange} label={label} placeholder={placeholder} name={name} description={description} type={type} rows={rows} rules = {rules} autoComplete={autoComplete} inputProps={inputProps} errorMessProps={errorMessProps} descriptionProps={descriptionProps} onNotValidChange={onNotValidChange} onValidChange={onValidChange} fileInputRightSideText={fileInputRightSideText} disallowFormGroup={disallowFormGroup} quillModules={quillModules} />
- * )
+ * @param {{rules: Array.<InputRules>}} props 
  */
 const CryoInput = (props) => {
-    const { defaultValue, value = "", onChange = () => {}, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText, disallowFormGroup, quillModules } = props
-
     return (
         <Input {...props} />
     )

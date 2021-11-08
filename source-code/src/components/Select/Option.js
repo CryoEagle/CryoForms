@@ -1,21 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import SelectContext from './SelectContext';
-import PropTypes from 'prop-types';
 
-/**
- * Option element, must be inside of CryoSelect. You can select multiple options and we have plan for some improvements.
- *
- * @component
- * @param {string} value Value of option
- * @param {component} children Children means component inside like this <CryoOption>...Children...</CryoOption>
- * @param {string} selectedBackgroundColor Background color when option is in state selected
- * @param {string} selectedColor Color of text when option is in selected state
- * @example
- * return (
- *   <CryoOption value="test" ><span>Test</span></CryoOption>
- * )
- */
-const CryoOption = ({value, children, selectedBackgroundColor = '#e8572a', selectedColor = '#fff'}) => {
+
+const Option = ({value, children, selectedBackgroundColor = '#e8572a', selectedColor = '#fff'}) => {
 
     const [valueState, setValueState] = useState(value);
     const [defaultCss, setDefaultCss] = useState({});
@@ -74,10 +61,4 @@ const CryoOption = ({value, children, selectedBackgroundColor = '#e8572a', selec
     )
 }
 
-CryoOption.propTypes = {
-    value: PropTypes.any,
-    selectedBackgroundColor: PropTypes.string,
-    selectedColor: PropTypes.string
-}
-
-export default CryoOption;
+export default Option;

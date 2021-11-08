@@ -1,8 +1,8 @@
 import React from 'react';
-import { CryoInput, CryoOption } from '../components/Forms';
+import { CryoInput } from '../components/Forms';
 
 const Input = () => {
     return (
-        <CryoOption  />
+        <CryoInput rules={[{errorMessage: 'lol', type: ''}]} />
     )
 }

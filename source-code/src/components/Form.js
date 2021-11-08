@@ -1,30 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-/**
- * Creates Form that can be filled, saved very easilly with realtime input checking.
- * 
- * @component
- * @param {function} successFuncJson Function called when inputs are OK and send there json as first parameter. Example: (json) => {success(json)}
- * @param {function} successFuncFormData Function called when inputs are OK and send there FormData as first parameter. Example: (formData) => {success(formData)}
- * @param {failedFunc} failedFunc Function called when form is filled wrong and send there error detail as first parameter
- * @param {component} children Children means component inside like this <CryoForm>...Children...</CryoForm>
- * @param {cryoFormState} form This uses our own hook, you can create that hook like this: const [form] = cryoUseForm();
- * @example
- * 
- * const [form] = cryoUseForm();
- * 
- * const success = (json) => {
- *  form.clearInputs();
- *  console.log(json.name);
- * }
- * 
- * return (
- *  <Form successFuncJson={success}>
- *      <CryoInput label="Name" placeholder="name" name="name"  /> 
- *  </Form>
- * )
- */
-const CryoForm = ({successFuncJson = null, successFuncFormData = null, failedFunc = () => {}, children, form = null}) => {
+const Form = ({successFuncJson = null, successFuncFormData = null, failedFunc = () => {}, children, form = null}) => {
     const formRef = useRef(null);
 
     useEffect(() => {
@@ -117,12 +93,4 @@ const CryoForm = ({successFuncJson = null, successFuncFormData = null, failedFun
     )
 }
 
-CryoForm.propTypes = {
-    successFuncJson: PropTypes.func,
-    successFuncFormData: PropTypes.func,
-    failedFunc: PropTypes.func,
-    children: PropTypes.arrayOf(PropTypes.element),
-    form: PropTypes.object
-}
-
-export default CryoForm;
+export default Form;

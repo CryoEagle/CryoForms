@@ -88,7 +88,7 @@ const DefaultFileUploadRightSide = ({fileInputRightSideText = 'Choose file'}) =>
     )
 }
 
-const CryoInput = ({defaultValue, value = "", onChange = () => {}, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText, disallowFormGroup, quillModules}) => {
+const Input = ({defaultValue, value = "", onChange = () => {}, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText, disallowFormGroup, quillModules}) => {
     const [valueState, setValueState] = useState((defaultValue ? defaultValue : value));
     
     const id = uuid();
@@ -289,25 +289,4 @@ const CryoInput = ({defaultValue, value = "", onChange = () => {}, label, placeh
     )
 }
 
-CryoInput.propTypes = {
-    label: PropTypes.string,
-    placeholder: PropTypes.string,
-    name: PropTypes.string,
-    description: PropTypes.string,
-    type: PropTypes.string,
-    rows: PropTypes.number,
-    autoComplete: PropTypes.string,
-    inputProps: PropTypes.object,
-    errorMessProps: PropTypes.object,
-    onNotValidChange: PropTypes.func,
-    onValidChange: PropTypes.func,
-    descriptionProps: PropTypes.object,
-    defaultValue: PropTypes.string,
-    fileInputRightSideText: PropTypes.string,
-    value: PropTypes.string,
-    onChange: PropTypes.func,
-    disallowFormGroup: PropTypes.bool,
-    quillModules: PropTypes.object
-}
-
-export default CryoInput;
+export default Input;
