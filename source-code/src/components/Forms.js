@@ -133,26 +133,47 @@ CryoForm.propTypes = {
     form: PropTypes.object
 }
 
+
 /**
  * @typedef InputRules
  * @type {Object}
  * @property {string} errorMessage
+ * @property {bool} required
  * @property {number} minLength
  * @property {number} maxLength
  * @property {("email"|"number")} type
  */
 
 /**
- * Component that displays basic or advanced input.
+ * Creates input, but very fancy with lot of cool stuff there, you can use very advanced inputs
  * 
- * @param {{rules: Array.<InputRules>, label: string}} props 
+ * @component
+ * @param {string} defaultValue Default value means that input will save value to state only at start, lot of times it's enough.
+ * @param {string} value Operates with state whole time.
+ * @param {function} onChange Is called when input changed.
+ * @param {string} label Label is something like title, visible even when input is filled.
+ * @param {string} placeholder Classic placeholder like in HTML.
+ * @param {string} name Very important and will be used as object property while saving to JSON.
+ * @param {string} description Small text for user, can be filled with some instruction or whatever.
+ * @param {string} type This input don't support all types, some of the types must be set in rules, allowed types are text, password, textarea, richtext, file
+ * @param {number} rows Is used when input type is textarea
+ * @param {Array.<InputRules>} rules For example rules={[{required: true, errorMessage: 'This input muset be filled'}, {...}]}
+ * @param {string} autoComplete You can set autoComplete='off'.
+ * @param {props} inputProps Custom props of input.
+ * @param {props} errorMessProps Custom props of error message.
+ * @param {props} descriptionProps Custom props of description component.
+ * @param {function} onNotValidChange Function called when change is not valid.
+ * @param {function} onValidChange Function called when change is valid.
+ * @param {string} fileInputRightSideText Text in file input on right side.
+ * @param {bool} disallowFormGroup Removes class with bottom margin.
+ * @param {quillProps} quillModules Set custom props to quill richtext editor
+ * @example 
  * return (
- *  <CryoInput defaultValue={defaultValue} value={value} onChange={onChange} label={label} placeholder={placeholder} name={name} description={description} type={type} rows={rows} rules = {rules} autoComplete={autoComplete} inputProps={inputProps} errorMessProps={errorMessProps} descriptionProps={descriptionProps} onNotValidChange={onNotValidChange} onValidChange={onValidChange} fileInputRightSideText={fileInputRightSideText} disallowFormGroup={disallowFormGroup} quillModules={quillModules} />
+ *  <CryoInput label="Name" placeholder="name" name="name"  /> 
  * )
  */
-const CryoInput = (props) => {
-    const { defaultValue, value = "", onChange = () => {}, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText, disallowFormGroup, quillModules } = props
 
+export const CryoInput = (props) => {
     return (
         <Input {...props} />
     )
@@ -165,6 +186,7 @@ CryoInput.propTypes = {
     description: PropTypes.string,
     type: PropTypes.string,
     rows: PropTypes.number,
+    rules: PropTypes.array,
     autoComplete: PropTypes.string,
     inputProps: PropTypes.object,
     errorMessProps: PropTypes.object,
@@ -178,8 +200,6 @@ CryoInput.propTypes = {
     disallowFormGroup: PropTypes.bool,
     quillModules: PropTypes.object
 }
-
-export { CryoInput };
 
 export const CryoButton = (props) => {
     return (

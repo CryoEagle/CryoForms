@@ -10,7 +10,6 @@ import React, { useEffect, useRef } from 'react';
  * @param {component} children Children means component inside like this <CryoForm>...Children...</CryoForm>
  * @param {cryoFormState} form This uses our own hook, you can create that hook like this: const [form] = cryoUseForm();
  * @example
- * 
  * const [form] = cryoUseForm();
  * 
  * const success = (json) => {

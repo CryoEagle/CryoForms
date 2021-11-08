@@ -1,8 +1,75 @@
-import React, { useEffect, useRef, useState } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Input.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Input.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useRef, useState } from 'react';
 import uuid from 'react-uuid';
 import Group from './HOC/Group';
 import RichTextEditor from './RichTextEditor/RichTextEditor';
 import createFileList from 'create-file-list'
+
+/**
+ * @typedef InputRules
+ * @type {Object}
+ * @property {string} errorMessage
+ * @property {bool} required
+ * @property {number} minLength
+ * @property {number} maxLength
+ * @property {("email"|"number")} type
+ */
+
+/**
+ * Creates input, but very fancy with lot of cool stuff there, you can use very advanced inputs
+ * 
+ * @component
+ * @param {string} defaultValue Default value means that input will save value to state only at start, lot of times it's enough.
+ * @param {string} value Operates with state whole time.
+ * @param {function} onChange Is called when input changed.
+ * @param {string} label Label is something like title, visible even when input is filled.
+ * @param {string} placeholder Classic placeholder like in HTML.
+ * @param {string} name Very important and will be used as object property while saving to JSON.
+ * @param {string} description Small text for user, can be filled with some instruction or whatever.
+ * @param {string} type This input don't support all types, some of the types must be set in rules, allowed types are text, password, textarea, richtext, file
+ * @param {number} rows Is used when input type is textarea
+ * @param {Array.&lt;InputRules>} rules For example rules={[{required: true, errorMessage: 'This input muset be filled'}, {...}]}
+ * @param {string} autoComplete You can set autoComplete='off'.
+ * @param {props} inputProps Custom props of input.
+ * @param {props} errorMessProps Custom props of error message.
+ * @param {props} descriptionProps Custom props of description component.
+ * @param {function} onNotValidChange Function called when change is not valid.
+ * @param {function} onValidChange Function called when change is valid.
+ * @param {string} fileInputRightSideText Text in file input on right side.
+ * @param {bool} disallowFormGroup Removes class with bottom margin.
+ * @param {quillProps} quillModules Set custom props to quill richtext editor
+ * @example 
+ * return (
+ *  &lt;CryoInput label="Name" placeholder="name" name="name"  /> 
+ * )
+ */
 
 const CryoInput = ({defaultValue, value = "", onChange = () => {}, label, placeholder, name, description, type = 'text', rows = 1, rules = [], autoComplete = "", inputProps = {}, errorMessProps = {}, descriptionProps = {}, onNotValidChange = () => {}, onValidChange = () => {}, fileInputRightSideText, disallowFormGroup, quillModules}) => {
     const imageTypes = Object.freeze({'PNG': 'image/png', 'JPG': 'image/jpeg'})
@@ -32,7 +99,7 @@ const CryoInput = ({defaultValue, value = "", onChange = () => {}, label, placeh
     }
 
     const ruleMinLength = (inputEl, errorEl, mess, length) => {
-        if(inputEl.value.length < length){
+        if(inputEl.value.length &lt; length){
             inputEl.setAttribute('error', mess);
             errorEl.style.display = 'block';
             errorEl.innerHTML = mess;
@@ -57,7 +124,7 @@ const CryoInput = ({defaultValue, value = "", onChange = () => {}, label, placeh
 
     const ruleType = (inputEl, errorEl, mess, type) => {
         const validateEmail = (email) => {
-            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            const re = /^(([^&lt;>()[\]\\.,;:\s@"]+(\.[^&lt;>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
         }
 
@@ -66,12 +133,12 @@ const CryoInput = ({defaultValue, value = "", onChange = () => {}, label, placeh
             return re.test(number);
         }
         
-        if(type == 'email' && !validateEmail(inputEl.value)){
+        if(type == 'email' &amp;&amp; !validateEmail(inputEl.value)){
             inputEl.setAttribute('error', mess);
             errorEl.style.display = 'block';
             errorEl.innerHTML = mess;
             return true;
-        } else if (type == 'number' && !validateNumber(inputEl.value)){
+        } else if (type == 'number' &amp;&amp; !validateNumber(inputEl.value)){
             inputEl.setAttribute('error', mess);
             errorEl.style.display = 'block';
             errorEl.innerHTML = mess;
@@ -84,7 +151,7 @@ const CryoInput = ({defaultValue, value = "", onChange = () => {}, label, placeh
 
     const DefaultFileUploadRightSide = ({fileInputRightSideText = 'Choose file'}) => {
         return (
-            <div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.4)', borderRadius: '0 4px 4px 0'}} className="cryo-hover-pointer"><span style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', whiteSpace: 'nowrap', color: 'white'}}>{fileInputRightSideText}</span></div>
+            &lt;div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,.4)', borderRadius: '0 4px 4px 0'}} className="cryo-hover-pointer">&lt;span style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', whiteSpace: 'nowrap', color: 'white'}}>{fileInputRightSideText}&lt;/span>&lt;/div>
         )
     }
     
@@ -250,41 +317,41 @@ const CryoInput = ({defaultValue, value = "", onChange = () => {}, label, placeh
     }
 
     return (
-        <Group disallowFormGroup={disallowFormGroup}>
-            <div className={`cryo-input`}>
-                <small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess ${!label ? 'cryo-mb': ''} ${(errorMessProps.className ? errorMessProps.className : '')}`}></small>
-                <div className='cryo-input'>
-                    {(innerType == 'text' || innerType ==  'password') && (
-                        <input ref={inputRef} {...inputProps} {...inputData} autoComplete={autoComplete} />
+        &lt;Group disallowFormGroup={disallowFormGroup}>
+            &lt;div className={`cryo-input`}>
+                &lt;small {...errorMessProps} ref={errorMessRef} className={`cryo-error-mess ${!label ? 'cryo-mb': ''} ${(errorMessProps.className ? errorMessProps.className : '')}`}>&lt;/small>
+                &lt;div className='cryo-input'>
+                    {(innerType == 'text' || innerType ==  'password') &amp;&amp; (
+                        &lt;input ref={inputRef} {...inputProps} {...inputData} autoComplete={autoComplete} />
                     )}
 
-                    {innerType == 'textarea' && (
-                        <textarea ref={inputRef} {...inputProps} {...inputData} />
+                    {innerType == 'textarea' &amp;&amp; (
+                        &lt;textarea ref={inputRef} {...inputProps} {...inputData} />
                     )}
 
-                    {innerType == 'richtext' && (
-                        <RichTextEditor resetFieldHandler={richTextResetField} inputRef={inputRef} inputProps={{...inputProps}} inputdata={{...inputData}} quillModules={quillModules} />
+                    {innerType == 'richtext' &amp;&amp; (
+                        &lt;RichTextEditor resetFieldHandler={richTextResetField} inputRef={inputRef} inputProps={{...inputProps}} inputdata={{...inputData}} quillModules={quillModules} />
                     )}
                     
-                    {innerType == 'file' && (
-                        <div style={{display: 'flex', flexWrap: 'nowrap', width: '100%'}} onClick={openFile}>
-                            <input ref={inputRef} {...inputProps} {...inputData} type='text' disabled={true} autoComplete={autoComplete} style={{width: '70%', borderRadius: '4px 0 0 4px'}} />
-                            <div style={{width: '30%', height: '100%', position: 'relative'}}><DefaultFileUploadRightSide fileInputRightSideText={fileInputRightSideText} /></div>
-                            <input onChange={fileInputChange} ref={fileInputRef} type='file' style={{display: 'none'}} />
-                        </div>
+                    {innerType == 'file' &amp;&amp; (
+                        &lt;div style={{display: 'flex', flexWrap: 'nowrap', width: '100%'}} onClick={openFile}>
+                            &lt;input ref={inputRef} {...inputProps} {...inputData} type='text' disabled={true} autoComplete={autoComplete} style={{width: '70%', borderRadius: '4px 0 0 4px'}} />
+                            &lt;div style={{width: '30%', height: '100%', position: 'relative'}}>&lt;DefaultFileUploadRightSide fileInputRightSideText={fileInputRightSideText} />&lt;/div>
+                            &lt;input onChange={fileInputChange} ref={fileInputRef} type='file' style={{display: 'none'}} />
+                        &lt;/div>
                     )}
 
-                    {label && (
-                        <div className='cryo-label'>
-                            <span><label htmlFor={id}>{label}</label> {rules.some(() => item => item.required == true) && <span>*</span>}</span>
-                        </div>
+                    {label &amp;&amp; (
+                        &lt;div className='cryo-label'>
+                            &lt;span>&lt;label htmlFor={id}>{label}&lt;/label> {rules.some(() => item => item.required == true) &amp;&amp; &lt;span>*&lt;/span>}&lt;/span>
+                        &lt;/div>
                     )}
-                </div>
-                {description && (
-                    <small {...descriptionProps} className={`cryo-description ${(descriptionProps.className ? descriptionProps.className : "")}`}>{description} </small>
+                &lt;/div>
+                {description &amp;&amp; (
+                    &lt;small {...descriptionProps} className={`cryo-description ${(descriptionProps.className ? descriptionProps.className : "")}`}>{description} &lt;/small>
                 )}
-            </div>
-        </Group>
+            &lt;/div>
+        &lt;/Group>
     )
 }
 
@@ -310,4 +377,26 @@ CryoInput.propTypes = {
     quillModules: PropTypes.object
 }
 
-export default CryoInput;
+export default CryoInput;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CryoForm.html">CryoForm</a></li><li><a href="CryoInput.html">CryoInput</a></li><li><a href="CryoOption.html">CryoOption</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Nov 08 2021 17:58:27 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
